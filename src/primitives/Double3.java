@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package primitives;
 
@@ -7,7 +7,7 @@ import static primitives.Util.isZero;
 
 /**
  * This class will serve all primitive classes based on three numbers
- * @author Dan Zilberstein
+ *  * @author Dan Zilberstein
  */
 public class Double3 {
    /** First number */
@@ -49,9 +49,9 @@ public class Double3 {
    public boolean equals(Object obj) {
       if (this == obj) return true;
       return (obj instanceof Double3 other)
-            && isZero(d1 - other.d1)
-            && isZero(d2 - other.d2)
-            && isZero(d3 - other.d3);
+              && isZero(d1 - other.d1)
+              && isZero(d2 - other.d2)
+              && isZero(d3 - other.d3);
    }
 
    @Override
