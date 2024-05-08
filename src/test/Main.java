@@ -5,6 +5,11 @@ import static java.lang.System.out;
 import static primitives.Util.isZero;
 
 import primitives.*;
+/*
+Submitted by:
+ Zohar Tamsut ; id:213074909 ; Email:zoahr97@gmail.com
+ Dvora Enav ; id:214818080 ; Email:dvoraenav@gmail.com
+*/
 
 /**
  * Test program for the 1st stage
