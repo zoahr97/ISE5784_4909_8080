@@ -10,7 +10,7 @@ public class Cylinder {
     private final double height;
 
     /** Constructor to initialize Sphere based object with a radius and height
-     * @param height the hieght of the Cylinder value
+     * @param height the height of the Cylinder value
      * */
     public Cylinder(double height) {
         this.height = height;
