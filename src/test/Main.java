@@ -7,8 +7,8 @@ import static primitives.Util.isZero;
 import primitives.*;
 /*
 Submitted by:
- Zohar Tamsut ; id:213074909 ; Email:zoahr97@gmail.com
- Dvora Enav ; id:214818080 ; Email:dvoraenav@gmail.com
+ Zohar Tamsut ; id:213074909 ; Email: zoahr97@gmail.com
+ Dvora Enav ; id:214818080 ; Email: dvoraenav@gmail.com
 */
 
 /**
