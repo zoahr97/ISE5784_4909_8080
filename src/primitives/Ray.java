@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  *This class represents a ray represented by both a point and a vector
+ *  @author Dvora Enav and Zohar Tamsut
  */
 public class Ray {
     /** field of the start of the ray

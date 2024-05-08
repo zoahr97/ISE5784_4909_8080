@@ -2,6 +2,7 @@ package primitives;
 
 /**
  * This class represents a vector
+ *  @author Dvora Enav and Zohar Tamsut
  */
 public class Vector extends Point {
     /**
@@ -66,12 +67,10 @@ public class Vector extends Point {
 
     /**
      *
-     * @param v One of the vectors on which the cross product is done
+     * @param vector One of the vectors on which the cross product is done
      * @return A new vector perpendicular to the two existing vectors
      */
-    //public Vector crossProduct(Vector v) {
-     //   return new Vector(xyz.d2*v.xyz.d3-xyz.d3*v.xyz.d2,xyz.d3*xyz.d1*v.xyz.d3,xyz.d1*v.xyz.d2-xyz.d2*v.xyz.d1);
-   //}
+
     public Vector crossProduct(Vector vector) {
         double x = xyz.d2 * vector.xyz.d3 - xyz.d3 * vector.xyz.d2;
         double y = xyz.d3 * vector.xyz.d1 - xyz.d1 * vector.xyz.d3;
