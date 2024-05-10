@@ -19,14 +19,14 @@ public class Plane implements Geometry{
     private final Vector normal;
     /**
      * Constructor to initialize a Plane object with three points.
-     *
-     * @param vertex the first point used to define the plane
-     * @param vertex1 the second point used to define the plane
-     * @param vertex2 the third point used to define the plane
+     *the normal is calculating by the formula from lesson:cross product between 2 vectors
+     * @param p1 the first point used to define the plane
+     * @param p2 the second point used to define the plane
+     * @param p3 the third point used to define the plane
      */
-    public Plane(Point vertex, Point vertex1, Point vertex2) {/*ToDo implement const*/
-        this.q = vertex;
-        this.normal = null;
+    public Plane(Point p1, Point p2, Point p3) {
+        this.normal= p2.subtract(p1).crossProduct(p3.subtract(p1)).normalize();
+        this.q= p1;
     }
     /**
      * Constructor to initialize Plane object with a point and a normal vector.
@@ -47,8 +47,7 @@ public class Plane implements Geometry{
      * @return The normal vector as a {@link Vector} object.
      */
     public Vector getNormal() {
-        return normal;/*ToDo calculate normal*/
-
+        return normal;
     }
 
 

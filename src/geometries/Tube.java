@@ -3,6 +3,9 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
+import static primitives.Util.alignZero;
+
 /**
  * The Tube class represents a tube object in a 3D space.
  * It is defined by a radius and an axis ray.
@@ -22,14 +25,55 @@ public class Tube extends RadialGeometry {
     public Tube(double radius) {
         super(radius);
     }
+    public Tube(double radius, Ray axisRay) {
+        super(radius);
+        this.axis = axisRay;
+    }
 
+    public Ray getAxisRay()
+    {
+        return axis;
+    }
     /**
      * Calculates the normal vector of a surface at a given point, based on an axis ray.
      *
-     * @param p The point on the surface for which the normal vector needs to be calculated.
+     * @param point The point on the surface for which the normal vector needs to be calculated.
      * @return The normalized normal vector at the given point.
      */
+/*
     public Vector getNormal(Point p){
         return null;
     }
+*/
+    @Override
+    public Vector getNormal(Point point) {
+
+        Point head = axis.getHead();
+        Vector dir= axis.getDirection();
+
+        // Check if the given point is equal to the starting point of the axis ray
+        if (point.equals(head)) {
+            throw new IllegalArgumentException("point cannot be equal to head");
+        }
+
+        // Calculate the parameter t by taking the dot product of the vector from the
+        // starting point of the axis ray to the given point with the direction vector of the axis ray
+        double t = alignZero(point.subtract(head).dotProduct(dir));
+
+        // If t is 0, return the normalized vector from the given point to the starting point of the axis ray
+        if (t == 0) {
+            // The point is against the axis start point
+            // Return the vector from the given point to the start of the ray, normalized
+            return point.subtract(head).normalize();
+        }
+
+        // Calculate the projection of the given point onto the axis ray by adding the scaled
+        // direction vector of the axis ray to the starting point of the axis ray
+        Point p = head.add(dir.scale(t));
+
+        // Return the normalized vector from the given point to the calculated projection as the normal vector
+        return point.subtract(p).normalize();
+    }
+
+
 }

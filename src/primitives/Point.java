@@ -1,6 +1,5 @@
 package primitives;
 
-
 /**
  * This class represents a point in space with 3 coordinates represented by a field of the class double3 by containment
  *  @author Dvora Enav and Zohar Tamsut

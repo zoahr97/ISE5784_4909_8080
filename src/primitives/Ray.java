@@ -14,6 +14,7 @@ public class Ray {
      */
     private Vector direction;
 
+    private static final double DELTA = 0.1;
     /**
      *
      * @param p1 is point to start from her
@@ -22,6 +23,23 @@ public class Ray {
     public Ray(Point p1,Vector v1){
         head = p1;
         direction =v1.normalize();
+    }
+    /**
+     * Returns the starting point of the ray.
+     *
+     * @return the starting point of the ray.
+     */
+        public Point getHead() {
+        return head;
+    }
+
+    /**
+     * Returns the direction of the ray.
+     *
+     * @return the direction of the ray.
+     */
+    public Vector getDirection() {
+        return direction;
     }
 
     @Override
