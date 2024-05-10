@@ -62,7 +62,7 @@ public class Vector extends Point {
      * @return the dot result of the dot product(number)
      */
     public double dotProduct(Vector v) {
-        return (xyz.d1*v.xyz.d1)+ (xyz.d2*v.xyz.d2)+(xyz.d3*v.xyz.d3);
+        return (xyz.d1*v.xyz.d1)+(xyz.d2*v.xyz.d2)+(xyz.d3*v.xyz.d3);
     }
 
     /**
@@ -72,10 +72,10 @@ public class Vector extends Point {
      */
 
     public Vector crossProduct(Vector vector) {
-        double x = xyz.d2 * vector.xyz.d3 - xyz.d3 * vector.xyz.d2;
-        double y = xyz.d3 * vector.xyz.d1 - xyz.d1 * vector.xyz.d3;
-        double z = xyz.d1 * vector.xyz.d2 - xyz.d2 * vector.xyz.d1;
-        return new Vector(x, y, z);
+        return new Vector
+                (xyz.d2 * vector.xyz.d3 - xyz.d3 * vector.xyz.d2
+                        ,xyz.d3 * vector.xyz.d1 - xyz.d1 * vector.xyz.d3 ,
+                        xyz.d1 * vector.xyz.d2 - xyz.d2 * vector.xyz.d1 );
     }
     /**
      *
@@ -90,5 +90,6 @@ public class Vector extends Point {
         return obj instanceof Vector other && super.equals(other);
     }
     @Override
-    public String toString() { return "->" + super.toString(); }
+    public String toString() { return "->" + super.toString();
+    }
 }
