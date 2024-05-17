@@ -40,6 +40,16 @@ public class Plane implements Geometry{
     }
 
     /**
+     * Returns the point on the plane.
+     *
+     * @return The point on the plane as a {@link Point} object.
+     */
+
+    public Point getQ() {
+        return q;
+    }
+
+    /**
      * getter
      *
      * Returns the normal vector of the object.

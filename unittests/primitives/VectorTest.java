@@ -12,6 +12,13 @@ class VectorTest {
     Vector v3 = new Vector(0, 3, -2);
 
     @Test
+    void testVector() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Vector(0, 0, 0),
+                "vector can not be (0,0,0)");
+    }
+
+    @Test
     void testAdd()
     {
         // ============ Equivalence Partitions Tests ==============
@@ -95,7 +102,7 @@ class VectorTest {
 
     @Test
     void testNormalize()
-    {
+    { //0.0000000001=1e-10
         Vector v = new Vector(3.5, -5, 10);
         v = v.normalize();
         assertEquals(1, v.length(), 1e-10, "normalize() function creates a vector with length other than 1");
