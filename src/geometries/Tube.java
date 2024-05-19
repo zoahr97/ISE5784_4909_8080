@@ -30,8 +30,7 @@ public class Tube extends RadialGeometry {
         this.axis = axisRay;
     }
 
-    public Ray getAxisRay()
-    {
+    public Ray getAxisRay() {
         return axis;
     }
     /**
@@ -56,26 +55,20 @@ public class Tube extends RadialGeometry {
             throw new IllegalArgumentException("point cannot be equal to head");
         }
 
-        //חישוב פרמטר t
-       // חלק זה של הקוד מחשב פרמטר t המייצג את המרחק לאורך קרן הציר שבו ההטלה של הנקודה הנתונה נופלת.
+
         // Calculate the parameter t by taking the dot product of the vector from the
         // starting point of the axis ray to the given point with the direction vector of the axis ray
         double t = alignZero(point.subtract(head).dotProduct(dir));
 
-        //ערך של t = 0 אומר שההטלה נופלת בדיוק על נקודת הראש (נקודת ההתחלה) של הקרן
+
         // If t is 0, return the normalized vector from the given point to the starting point of the axis ray
         if (t == 0) {
             // The point is against the axis start point
             // Return the vector from the given point to the start of the ray, normalized
             return point.subtract(head).normalize();
         }
-       //בעוד ש- t חיובי מציין שההטלה נופלת לאורך וקטור הכיוון.
-        // Calculate the projection of the given point onto the axis ray by adding the scaled
-        // direction vector of the axis ray to the starting point of the axis ray
-        Point p = head.add(dir.scale(t));
-
-        // Return the normalized vector from the given point to the calculated projection as the normal vector
-        return point.subtract(p).normalize();
+        // direction vector of the axis ray to the starting point of the axis ray and Return the normalized vector from the given point to the calculated projection as the normal vector
+        return point.subtract(head.add(dir.scale(t))).normalize();
     }
 
 

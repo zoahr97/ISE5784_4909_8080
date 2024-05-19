@@ -28,17 +28,9 @@ public class Sphere extends RadialGeometry{
      * @return The normal vector as a {@link Vector} object.
      */
 
-    /*
-    public Vector getNormal(Point p){
-        return null;
-    }
-    */
-
     public Vector getNormal(Point point) {
         // Calculate the vector from the center of the sphere to the given point
-        Vector vec = point.subtract(center);
-
-        // Normalize the vector to obtain the normal vector
-        return vec.normalize();
+        //  and Normalize the vector to obtain the normal vector
+        return point.subtract(center).normalize();
     }
 }

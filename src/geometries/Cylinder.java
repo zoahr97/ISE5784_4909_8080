@@ -58,25 +58,16 @@ public class Cylinder extends Tube
         Point head = axis.getHead();
         Vector dir = axis.getDirection();
 
+        // Calculate the projection of (point - head) onto the axis ray and Calculate the distance from head to the object in front of the given point
+        double t = alignZero(point.subtract(head).dotProduct(dir));
+
         // Check if the given point is the same as the base point of the axis
-        if (point.equals(head))
+        if (point.equals(head)||t == 0 || isZero(height - t))
             return dir;
 
-        // Calculate the projection of (point - p0) onto the axis ray
-        Vector u = point.subtract(head);
-
-        // Calculate the distance from p0 to the object in front of the given point
-        double t = alignZero(u.dotProduct(dir));
-
-        // If the given point is at the base of the object or at the top of the object
-        if (t == 0 || isZero(height - t))
-            return dir;
-
-        // Calculate the other point on the axis facing the given point
-        Point o = head.add(dir.scale(t));
 
         // Calculate the normalized vector from the given point to the other point on the axis
-        return point.subtract(o).normalize();
+        return point.subtract(head.add(dir.scale(t))).normalize();
     }
 
 }

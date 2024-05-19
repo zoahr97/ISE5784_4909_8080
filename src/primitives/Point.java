@@ -35,7 +35,9 @@ public class Point {
         return obj instanceof Point other && xyz.equals(other.xyz);
     }
     @Override
-    public String toString() { return "" + xyz;}
+    public String toString() {
+        return "" + xyz;
+    }
 
     /**
      * @param v is the vector we add to the point
@@ -51,7 +53,9 @@ public class Point {
      * @return the distance in square between the two points
      */
     public double distanceSquared(Point p){
-        return ((xyz.d1-p.xyz.d1)*(xyz.d1-p.xyz.d1))+((xyz.d2-p.xyz.d2)*(xyz.d2-p.xyz.d2))+((xyz.d3-p.xyz.d3)*(xyz.d3-p.xyz.d3));
+        return ((xyz.d1-p.xyz.d1)*(xyz.d1-p.xyz.d1))+
+                ((xyz.d2-p.xyz.d2)*(xyz.d2-p.xyz.d2))+
+                ((xyz.d3-p.xyz.d3)*(xyz.d3-p.xyz.d3));
     }
 
     /**

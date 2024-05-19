@@ -45,7 +45,8 @@ public class Ray {
     @Override
     public boolean equals(Object ob) {
         if (this == ob) return true;
-        return ob instanceof Ray && ((Ray)ob).head.equals(head)&&(((Ray)ob).direction.equals(direction));
+        return ob instanceof Ray && ((Ray)ob).head.equals(head)&&
+                (((Ray)ob).direction.equals(direction));
     }
 
 
