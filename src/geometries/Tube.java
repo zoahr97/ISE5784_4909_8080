@@ -30,20 +30,14 @@ public class Tube extends RadialGeometry {
         this.axis = axisRay;
     }
 
+    /**
+     *
+     * @return the axis of the ray
+     */
     public Ray getAxisRay() {
         return axis;
     }
-    /**
-     * Calculates the normal vector of a surface at a given point, based on an axis ray.
-     *
-     * @param point The point on the surface for which the normal vector needs to be calculated.
-     * @return The normalized normal vector at the given point.
-     */
-/*
-    public Vector getNormal(Point p){
-        return null;
-    }
-*/
+
     @Override
     public Vector getNormal(Point point) {
 

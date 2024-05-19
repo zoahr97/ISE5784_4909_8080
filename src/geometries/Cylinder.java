@@ -15,7 +15,12 @@ public class Cylinder extends Tube
     /** the height of the Cylinder*/
     private final double height;
 
-
+    /**
+     * cylinder constructor gets radius,ray and height
+     * @param radius is the radius of the cylinder
+     * @param axisRay is the axis ray of the cylinder
+     * @param height is the height of the cylinder
+     */
     public Cylinder(double radius,Ray axisRay, double height) {
         super(radius,axisRay);
         this.height = height;
@@ -27,12 +32,7 @@ public class Cylinder extends Tube
         return height;
     }
 
-/**
-    public Vector getNormal(Point p)
-    {
-        return null;
-    }
- */
+
 
     @Override
     public String toString() {
