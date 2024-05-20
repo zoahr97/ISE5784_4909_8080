@@ -1,6 +1,9 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
+
+import java.util.List;
 
 /**
  * Represents a triangle in 3D space defined by three {@link Point}s.
@@ -15,5 +18,8 @@ public class Triangle extends Polygon {
      */
     public Triangle(Point a, Point b, Point c) {
         super(a, b, c);
+    }
+    public List<Point> findIntsersections(Ray ray) {
+        return null;
     }
 }

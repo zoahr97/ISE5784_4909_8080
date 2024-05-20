@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import geometries.Polygon;
 import primitives.Point;
 import primitives.Vector;
 
@@ -117,4 +116,8 @@ public class PolygonTest {
                     "Polygon's normal is not orthogonal to one of the edges");
     }
 
+    @Test
+    void testFindIntersection() {
+
+    }
 }

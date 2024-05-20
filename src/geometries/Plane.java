@@ -1,6 +1,10 @@
 package geometries;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
 /**
  * Plane class which represents the location of a plane in space
  *  @author Dvora Enav and Zohar Tamsut
@@ -71,5 +75,10 @@ public class Plane implements Geometry{
      */
     public Vector getNormal(Point vertex) {
         return normal;
+    }
+
+    @Override
+    public List<Point> findIntsersections(Ray ray) {
+        return null;
     }
 }
