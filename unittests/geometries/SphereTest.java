@@ -51,9 +51,9 @@ class SphereTest {
         final Point p01 = new Point(-1, 0, 0);
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray's line is outside the sphere (0 points)
-        assertNull(sphere.findIntersections(new Ray(p01, v110)), "Ray's line out of sphere");
+        assertNull(sphere.findIntsersections(new Ray(p01, v110)), "Ray's line out of sphere");
         // TC02: Ray starts before and crosses the sphere (2 points)
-        final var result1 = sphere.findIntersections(new Ray(p01, v310))
+        final var result1 = sphere.findIntsersections(new Ray(p01, v310))
                 .stream().sorted(Comparator.comparingDouble(p -> p.distance(p01)))
                 .toList();
         assertEquals(2, result1.size(), "Wrong number of points");
@@ -119,6 +119,7 @@ class SphereTest {
 
     private void assertNull(List<Point> intersections, String s) {
     }
+
 
 
 }

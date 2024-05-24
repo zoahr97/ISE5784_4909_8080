@@ -17,5 +17,5 @@ public  abstract class RadialGeometry implements Geometry {
         this.radius = radius;
     }
 
-    public abstract List<Point> findIntersections(Ray ray);
+  //  public abstract List<Point> findIntersections(Ray ray);
 }

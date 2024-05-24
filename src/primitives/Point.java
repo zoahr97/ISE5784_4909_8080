@@ -44,11 +44,21 @@ public class Point {
         return "" + xyz;
     }
 
+
+    public double getX() {
+        return xyz.d1;
+    }
+    public double getY() {
+        return xyz.d2;
+    }
+    public double getZ() {
+        return xyz.d3;
+    }
+
     /**
      * this method takes 2 points and connect them to a one point
      * @param v is the vector we add to the point
      */
-
     public Point add(Vector v) {
         return new Point(xyz.add(v.xyz));
     }
