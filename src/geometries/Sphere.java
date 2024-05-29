@@ -39,11 +39,9 @@ public class Sphere extends RadialGeometry{
         return point.subtract(center).normalize();
     }
 
+
     @Override
     public List<Point> findIntsersections(Ray ray) {
-        return null;
+        return List.of();
     }
-
-
-
 }

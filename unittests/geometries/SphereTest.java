@@ -33,6 +33,8 @@ class SphereTest {
 
     }
 
+
+
     private final Point p001 = new Point(0, 0, 1);
     private final Point p100 = new Point(1, 0, 0);
     private final Vector v001 = new Vector(0, 0, 1);

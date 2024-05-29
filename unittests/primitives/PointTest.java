@@ -38,7 +38,7 @@ class PointTest {
     {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
-        assertEquals(Math.sqrt(14), new Point(1, 1, 1).distance(new Point(2, 3, 4)), 0.0001, //
+        assertEquals(Math.sqrt(9), new Point(1, 1, 2).distance(new Point(2, 3, 4)), 0.0001, //
                 "Wrong distance between the point and itself");
 
         // =============== Boundary Values Tests ==================
