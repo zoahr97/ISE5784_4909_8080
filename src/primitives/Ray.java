@@ -61,4 +61,9 @@ public class Ray {
                 ", direction=" + direction +
                 '}';
     }
+
+    public Point getPoint(double radius)
+    {
+        return getHead().add(getDirection().scale(radius));
+    }
 }
