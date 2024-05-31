@@ -12,7 +12,7 @@ import java.util.List;
  **/
 
 public  abstract class RadialGeometry implements Geometry {
-    protected double radius;
+    protected final double radius;
     public RadialGeometry(double radius) {
         this.radius = radius;
     }
