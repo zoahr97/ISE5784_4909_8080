@@ -48,8 +48,8 @@ class PlaneTest {
     }
 
     @Test
-    void testFindIntersections(){
-        Plane p =new Plane(new Point(1, 1, 1),new Vector(1,1,1));
+    void testFindIntersections() {
+        Plane p = new Plane(new Point(1, 1, 1), new Vector(1, 1, 1));
         List<Point> result;
         // ============ Equivalence Partitions Tests ==============
 

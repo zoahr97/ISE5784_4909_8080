@@ -45,7 +45,7 @@ class SphereTest {
      */
     @Test
     void testFindIntersections() {
-        Sphere sphere = new Sphere(new Point(1, 0, 0),1d );
+        Sphere sphere = new Sphere(new Point(1, 0, 0), 1d);
         final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
         final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
         final var exp = List.of(gp1, gp2);
@@ -77,7 +77,7 @@ class SphereTest {
         // **** Group: Ray's line crosses the sphere (but not the center)
 
         // TC11: Ray starts at sphere and goes inside (1 points)
-        final  var result3 = sphere.findIntersections(new Ray(new Point(0, 0, 0), new Vector(1, 1, 0)));
+        final var result3 = sphere.findIntersections(new Ray(new Point(0, 0, 0), new Vector(1, 1, 0)));
         assertEquals(result3, List.of(new Point(1, 1, 0)), "Error TC11");
 
         // TC12: Ray starts at sphere and goes outside (0 points)
@@ -105,7 +105,7 @@ class SphereTest {
         // TC16: Ray starts at the center (1 points)
         final var result7 = sphere.findIntersections(new Ray(new Point(1, 0, 0), v110));
         assertEquals(1, result7.size(), "Wrong number of points");
-        assertEquals(new Point(1.7071067811865475,0.7071067811865475,0.0), result7.get(0), "Ray starts at the center");
+        assertEquals(new Point(1.7071067811865475, 0.7071067811865475, 0.0), result7.get(0), "Ray starts at the center");
 
         // TC17: Ray starts at sphere and goes outside (0 points)
         assertNull(sphere.findIntersections(new Ray(gp1, v310.scale(-1))), "Ray starts at sphere and goes outside");

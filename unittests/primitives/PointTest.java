@@ -1,15 +1,16 @@
 package primitives;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class PointTest {
 
-    Point p = new Point(1,2,3);
+    Point p = new Point(1, 2, 3);
+
     @Test
-    void testAdd()
-    {
+    void testAdd() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(new Point(2, 3, 4), new Point(1, 1, 1).add(new Vector(1, 2, 3)), //
@@ -20,8 +21,7 @@ class PointTest {
     }
 
     @Test
-    void testDistanceSquared()
-    {
+    void testDistanceSquared() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(14d, new Point(1, 1, 1).distanceSquared(new Point(2, 3, 4)), 0.0001, //
@@ -34,8 +34,7 @@ class PointTest {
     }
 
     @Test
-    void testDistance()
-    {
+    void testDistance() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(Math.sqrt(9), new Point(1, 1, 2).distance(new Point(2, 3, 4)), 0.0001, //
@@ -48,8 +47,7 @@ class PointTest {
     }
 
     @Test
-    void testSubtract()
-    {
+    void testSubtract() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(new Vector(1, 1, 1), new Point(2, 3, 4).subtract(p), //

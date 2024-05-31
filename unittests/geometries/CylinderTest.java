@@ -13,48 +13,37 @@ class CylinderTest {
      */
     @Test
     void testGetNormal() {
-                Cylinder cyl = new Cylinder(1.0,
-                new Ray(new Point(0, 0, 1),
-                new Vector(0, 1, 0)),
-                1d);
+        Cylinder c = new Cylinder(1, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 2);
 
         // ============ Equivalence Partitions Tests ==============
-                // TC01: Point at a side of the cylinder
-                assertEquals(new Vector(0, 0, 1),
-                cyl.getNormal(new Point(0, 0.5, 2)),
-                "Bad normal to cylinder");
 
-                 // TC02: Point at a 1st base of the cylinder
-                assertEquals(new Vector(0, 1, 0),
-                cyl.getNormal(new Point(0, 0, 1.5)),
-                "Bad normal to lower base of cylinder");
+        // TC01: Test normal to a point on the round surface
+        Vector normalRoundSurface = c.getNormal(new Point(1, 0, 0));
+        assertEquals(new Vector(0, 0, -1), normalRoundSurface,
+                "TC01: Wrong normal to a point on the round surface");
 
-                // TC03: Point at a 2nd base of the cylinder
-                assertEquals(new Vector(0, 1, 0),
-                cyl.getNormal(new Point(0, 1, 0.5)),
-                "Bad normal to upper base of cylinder");
+        // TC02: Test normal to a point on the bottom base
+        Vector normalBottomBase = c.getNormal(new Point(0, 0, -1));
+        assertEquals(new Vector(0, 0, -1), normalBottomBase,
+                "TC02: Wrong normal to a point on the bottom base");
+
+        // TC03: Test normal to a point on the top base
+        Vector normalTopBase = c.getNormal(new Point(0, 0, 1));
+        assertEquals(new Vector(0, 0, 1), normalTopBase,
+                "TC03: Wrong normal to a point on the top base");
 
         // =============== Boundary Values Tests ==================
-                // TC11: Point at the center of 1st base
-                assertEquals(new Vector(0, 1, 0),
-                cyl.getNormal(new Point(0, 0, 1)),
-                "Bad normal to center of lower base");
 
-                // TC12: Point at the center of 2nd base
-                assertEquals(new Vector(0, 1, 0),
-                cyl.getNormal(new Point(0, 1, 1)),
-                "Bad normal to center of upper base");
 
-                // TC13: Point at the edge with 1st base
-                assertEquals(new Vector(0, 1, 0),
-                cyl.getNormal(new Point(0, 0, 2)),
-                "Bad normal to edge with lower base");
+        // TC04: Test normal to the center of the bottom base
+        Vector normalCenterBottomBase = c.getNormal(new Point(0, 0, 0));
+        assertEquals(new Vector(0, 0, -1), normalCenterBottomBase,
+                "TC06: Wrong normal to the center of the bottom base");
 
-                // TC14: Point at the edge with 2nd base
-                assertEquals(new Vector(0, 1, 0),
-                cyl.getNormal(new Point(0, 1, 2)),
-                "Bad normal to edge with upper base");
-
+        // TC05: Test normal to the center of the top base
+        Vector normalCenterTopBase = c.getNormal(new Point(0, 0, 2));
+        assertEquals(new Vector(0, 0, 1), normalCenterTopBase,
+                "TC07: Wrong normal to the center of the top base");
     }
 
     @Test

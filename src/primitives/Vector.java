@@ -80,7 +80,7 @@ public class Vector extends Point {
      * @return The dot product of this vector with the given vector.
      */
     public double dotProduct(Vector v) {
-        return  (xyz.d1 * v.xyz.d1) +
+        return (xyz.d1 * v.xyz.d1) +
                 (xyz.d2 * v.xyz.d2) +
                 (xyz.d3 * v.xyz.d3);
     }
@@ -105,11 +105,11 @@ public class Vector extends Point {
      */
     public Vector normalize() {
         double len = this.length();
-        return  new Vector(this.xyz.reduce(len));
+        return new Vector(this.xyz.reduce(len));
     }
 
 
-@Override
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         return obj instanceof Vector other && super.equals(other);

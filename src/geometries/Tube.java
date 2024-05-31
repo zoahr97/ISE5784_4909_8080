@@ -11,12 +11,15 @@ import static primitives.Util.alignZero;
 /**
  * The Tube class represents a tube object in a 3D space.
  * It is defined by a radius and an axis ray.
- *  @author Dvora Enav and Zohar Tamsut
+ *
+ * @author Dvora Enav and Zohar Tamsut
  */
 
 public class Tube extends RadialGeometry {
 
-    /** The axis ray of the tube. */
+    /**
+     * The axis ray of the tube.
+     */
     protected Ray axis;
 
     /**
@@ -27,13 +30,13 @@ public class Tube extends RadialGeometry {
     public Tube(double radius) {
         super(radius);
     }
+
     public Tube(double radius, Ray axisRay) {
         super(radius);
         this.axis = axisRay;
     }
 
     /**
-     *
      * @return the axis of the ray
      */
     public Ray getAxisRay() {
@@ -44,7 +47,7 @@ public class Tube extends RadialGeometry {
     public Vector getNormal(Point point) {
 
         Point head = axis.getHead();
-        Vector dir= axis.getDirection();
+        Vector dir = axis.getDirection();
 
         // Check if the given point is equal to the starting point of the axis ray
         if (point.equals(head)) {
