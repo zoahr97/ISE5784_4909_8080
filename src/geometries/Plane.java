@@ -90,7 +90,7 @@ public class Plane implements Geometry {
      * @return A list of intersection points between the ray and the plane, or null if there are no intersections.
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
         return null;
     }
 }
