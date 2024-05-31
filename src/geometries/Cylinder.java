@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
@@ -69,6 +71,9 @@ public class Cylinder extends Tube
         // Calculate the normalized vector from the given point to the other point on the axis
         return point.subtract(head.add(dir.scale(t))).normalize();
     }
-
+    @Override
+    public List<Point> findIntersections(Ray ray){
+        return null;
+    }
 }
 

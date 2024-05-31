@@ -2,6 +2,8 @@ package primitives;
 
 import java.util.Objects;
 
+import static primitives.Util.isZero;
+
 /**
  *This class represents a ray represented by both a point and a vector
  *  @author Dvora Enav and Zohar Tamsut
@@ -48,11 +50,6 @@ public class Ray {
         return ob instanceof Ray && ((Ray)ob).head.equals(head)&&
                 (((Ray)ob).direction.equals(direction));
     }
-    public Point getPoint(double t) {
-
-        return head.add(direction.scale(t));
-    }
-
 
     @Override
     public String toString() {
@@ -61,9 +58,22 @@ public class Ray {
                 ", direction=" + direction +
                 '}';
     }
-
+    /**
+     *
+     * @param t
+     * @return the new point
+     */
+    public Point getPoint(double t){
+        if(isZero(t)){
+            return head;
+        }
+        return head.add(direction.scale(t));
+    }
+    /*
     public Point getPoint(double radius)
     {
         return getHead().add(getDirection().scale(radius));
     }
+    */
+
 }

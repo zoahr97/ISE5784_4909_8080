@@ -23,7 +23,7 @@ public class Triangle extends Polygon {
         super(a, b, c);
     }
 
-    @Override
+
     public List<Point> findIntsersections(Ray ray) {
         List<Point> intersections = plane.findIntersections(ray);
         //if there are no intersections with the plane, there are no intersections with the triangle

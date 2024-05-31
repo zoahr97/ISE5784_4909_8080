@@ -93,10 +93,6 @@ public class Plane implements Geometry {
      * @return A list of intersection points between the ray and the plane, or null if there are no intersections.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        return null;
-    }
-
     public List<Point> findIntersections(Ray ray){
         //if the ray starts at the plane
         if(ray.getHead().equals(q)){
