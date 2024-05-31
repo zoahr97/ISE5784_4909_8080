@@ -48,6 +48,10 @@ public class Ray {
         return ob instanceof Ray && ((Ray)ob).head.equals(head)&&
                 (((Ray)ob).direction.equals(direction));
     }
+    public Point getPoint(double t) {
+
+        return head.add(direction.scale(t));
+    }
 
 
     @Override

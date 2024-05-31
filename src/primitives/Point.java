@@ -17,6 +17,7 @@ public class Point {
 
     /**
      * point constructor gets 3 doubles
+     *
      * @param d1 is first coordinate of point
      * @param d2 is  second coordinate of point
      * @param d3 is third coordinate of point
@@ -27,6 +28,7 @@ public class Point {
 
     /**
      * point constructor gets double3 point
+     *
      * @param xyz is point of 3 coordinates
      */
     public Point(Double3 xyz) {
@@ -44,19 +46,24 @@ public class Point {
         return "" + xyz;
     }
 
-
+    /** this method return the value of point
+     * @return the value of coordinates of point
+     */
     public double getX() {
         return xyz.d1;
     }
+
     public double getY() {
         return xyz.d2;
     }
+
     public double getZ() {
         return xyz.d3;
     }
 
     /**
      * this method takes 2 points and connect them to a one point
+     *
      * @param v is the vector we add to the point
      */
     public Point add(Vector v) {
@@ -65,17 +72,19 @@ public class Point {
 
     /**
      * this method calculates the distance squared between the two points
+     *
      * @param p is point we want to calculate the distance in square between her and xyz
      * @return the distance in square between the two points
      */
     public double distanceSquared(Point p) {
-        return  ((xyz.d1 - p.xyz.d1) * (xyz.d1 - p.xyz.d1)) +
+        return ((xyz.d1 - p.xyz.d1) * (xyz.d1 - p.xyz.d1)) +
                 ((xyz.d2 - p.xyz.d2) * (xyz.d2 - p.xyz.d2)) +
                 ((xyz.d3 - p.xyz.d3) * (xyz.d3 - p.xyz.d3));
     }
 
     /**
      * this method calculates the distance between the two points
+     *
      * @param p1 is point we want to calculate the distance between her and xyz(the second point)
      * @return the distance between the two points
      */
@@ -85,6 +94,7 @@ public class Point {
 
     /**
      * this method takes 2 vectors and subtracts between them
+     *
      * @param p1 is the second point we start the vector from her
      * @return vector from p1 to xyz
      */

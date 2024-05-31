@@ -39,4 +39,7 @@ class TubeTest
                 },
                 "ZERO vector is not allowed");
     }
+    @Test
+    void testFindIntersections() {
+    }
 }

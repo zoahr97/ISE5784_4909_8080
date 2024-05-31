@@ -5,6 +5,9 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * Plane class which represents the location of a plane in space
  *  @author Dvora Enav and Zohar Tamsut
@@ -80,5 +83,26 @@ public class Plane implements Geometry{
     @Override
     public List<Point> findIntsersections(Ray ray) {
         return null;
+    }
+
+    public List<Point> findIntersections(Ray ray){
+        //if the ray starts at the plane
+        if(ray.getHead().equals(q)){
+            return null;
+        }
+
+        double t=alignZero(normal.dotProduct(ray.getDirection()));
+        //if the ray is parallel to the plane
+        if(isZero(t)){
+            return null;
+        }
+
+        double t1=alignZero(normal.dotProduct(q.subtract(ray.getHead()))/t);
+        //if the ray is in the opposite direction of the normal
+        if(t1<=0){
+            return null;
+        }
+        //if the ray intersects the plane
+        return List.of(ray.getPoint(t1));
     }
 }
