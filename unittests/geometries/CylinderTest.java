@@ -46,6 +46,7 @@ class CylinderTest {
                 "TC07: Wrong normal to the center of the top base");
     }
 
+
     @Test
     void testFindIntersections() {
     }

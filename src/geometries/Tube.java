@@ -67,7 +67,7 @@ public class Tube extends RadialGeometry {
             return point.subtract(head).normalize();
         }
         // direction vector of the axis ray to the starting point of the axis ray and Return the normalized vector from the given point to the calculated projection as the normal vector
-        return point.subtract(head.add(dir.scale(t))).normalize();
+        return point.subtract(axis.getPoint(t)).normalize();
     }
 
 

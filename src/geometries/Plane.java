@@ -93,21 +93,22 @@ public class Plane implements Geometry {
      * @return A list of intersection points between the ray and the plane, or null if there are no intersections.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+
+    public List<Point> findIntersections(Ray ray){
         //if the ray starts at the plane
-        if (ray.getHead().equals(q)) {
+        if(ray.getHead().equals(q)){
             return null;
         }
 
-        double t = alignZero(normal.dotProduct(ray.getDirection()));
+        double t=alignZero(normal.dotProduct(ray.getDirection()));
         //if the ray is parallel to the plane
-        if (isZero(t)) {
+        if(isZero(t)){
             return null;
         }
 
-        double t1 = alignZero(normal.dotProduct(q.subtract(ray.getHead())) / t);
+        double t1=alignZero(normal.dotProduct(q.subtract(ray.getHead()))/t);
         //if the ray is in the opposite direction of the normal
-        if (t1 <= 0) {
+        if(t1<=0){
             return null;
         }
         //if the ray intersects the plane

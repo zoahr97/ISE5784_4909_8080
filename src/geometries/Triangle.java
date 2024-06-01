@@ -26,7 +26,7 @@ public class Triangle extends Polygon {
     }
 
 
-    public List<Point> findIntsersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
         List<Point> intersections = plane.findIntersections(ray);
         //if there are no intersections with the plane, there are no intersections with the triangle
         if (intersections == null) {

@@ -21,5 +21,5 @@ public abstract class RadialGeometry implements Geometry {
     }
 
 
-    //  public abstract List<Point> findIntersections(Ray ray);
+
 }

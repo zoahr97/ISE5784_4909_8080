@@ -9,7 +9,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TriangleTest {
+class TriangleTest
+{
     /**
      * Test method for {@link geometries.Triangle#getNormal(Point)}.
      */
@@ -23,14 +24,16 @@ class TriangleTest {
         Point p3 = new Point(0, 0, 1);
         Triangle triangle = new Triangle(p1, p2, p3);
         Vector vec = new Vector(0.5, 0.5, 0.5).normalize();
-        assertTrue((triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec)) ||
-                (triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec.scale(-1.0))), "ERROR: getNormal() wrong value");
-        //TC02 if the vector is normal
-        assertEquals( 1, triangle.getNormal(p1).length(),  0.000001,  "ERROR: the vector was not normal");
+        assertTrue(
+                (triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec)) ,
+                "ERROR: getNormal() wrong value");
+        //TC02 if the vector is normalized
+        assertEquals(
+                1, triangle.getNormal(p1).length(),
+                0.000001,
+                "ERROR: the vector was not normalized");
 
     }
-
-
     @Test
     void testFindIntersections() {
         Triangle triangle = new Triangle(new Point(3,0,0), new Point(0,3,0), new Point(0, 0, 4));
@@ -61,4 +64,5 @@ class TriangleTest {
         assertNull(triangle.findIntersections(new Ray(new Point(-1,0,0), new Vector(0.24, 0.01, 4.99))),
                 "Ray does not cross the triangle");
     }
+
 }
