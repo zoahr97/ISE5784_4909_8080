@@ -40,43 +40,11 @@ public class Point {
         this.xyz = xyz;
     }
 
-    /**
-     * Retrieves the X coordinate from a 3D point represented by a Double3 object.
-     *
-     * @param xyz The Double3 object representing the 3D point.
-     * @return The X coordinate of the point.
-     */
-    public double getX(Double3 xyz) {
-        return xyz.d1;
-    }
-
-    /**
-     * Retrieves the Y coordinate from a 3D point represented by a Double3 object.
-     *
-     * @param xyz The Double3 object representing the 3D point.
-     * @return The Y coordinate of the point.
-     */
-    public double getY(Double3 xyz) {
-        return xyz.d2;
-    }
-
-    /**
-     * Retrieves the Z coordinate from a 3D point represented by a Double3 object.
-     *
-     * @param xyz The Double3 object representing the 3D point.
-     * @return The Z coordinate of the point.
-     */
-    public double getZ(Double3 xyz) {
-        return xyz.d3;
-    }
-
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         return obj instanceof Point other && xyz.equals(other.xyz);
     }
-
 
     @Override
     public String toString() {

@@ -10,6 +10,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Sphere class.
+ * Tests the getNormal method to ensure it correctly computes the normal vector
+ * at various points on the sphere's surface.
+ * Tests the findIntersections method to ensure it correctly identifies the intersection points
+ * between a ray and the sphere.
+ */
+
 class SphereTest {
     /**
      * Test method for {@link geometries.Sphere#getNormal(Point)}.
@@ -67,7 +75,8 @@ class SphereTest {
         // TC03: Ray starts inside the sphere (1 point)
         final var result2 = sphere.findIntersections(new Ray(new Point(0.5, 0, 0), v110));
         assertEquals(1, result2.size(), "Wrong number of points");
-        assertEquals(new Point(1.4114378277661475, 0.9114378277661476, 0), result2.get(0), "Ray starts inside sphere");
+        assertEquals(new Point(1.4114378277661475, 0.9114378277661476, 0), result2.get(0),
+                "Ray starts inside sphere");
 
         // TC04: Ray starts after the sphere (0 points)
         assertNull(sphere.findIntersections(new Ray(new Point(2, 0, 0), v110)), "Ray starts after sphere");
@@ -100,15 +109,18 @@ class SphereTest {
         // TC15: Ray starts inside (1 points)
         final var result6 = sphere.findIntersections(new Ray(new Point(0.5, 0, 0), v110));
         assertEquals(1, result6.size(), "Wrong number of points");
-        assertEquals(new Point(1.4114378277661475, 0.9114378277661476, 0), result6.get(0), "Ray starts inside");
+        assertEquals(new Point(1.4114378277661475, 0.9114378277661476, 0), result6.get(0),
+                "Ray starts inside");
 
         // TC16: Ray starts at the center (1 points)
         final var result7 = sphere.findIntersections(new Ray(new Point(1, 0, 0), v110));
         assertEquals(1, result7.size(), "Wrong number of points");
-        assertEquals(new Point(1.7071067811865475, 0.7071067811865475, 0.0), result7.get(0), "Ray starts at the center");
+        assertEquals(new Point(1.7071067811865475, 0.7071067811865475, 0.0), result7.get(0),
+                "Ray starts at the center");
 
         // TC17: Ray starts at sphere and goes outside (0 points)
-        assertNull(sphere.findIntersections(new Ray(gp1, v310.scale(-1))), "Ray starts at sphere and goes outside");
+        assertNull(sphere.findIntersections(new Ray(gp1, v310.scale(-1))),
+                "Ray starts at sphere and goes outside");
 
         // TC18: Ray starts after sphere (0 points)
         assertNull(sphere.findIntersections(new Ray(new Point(2, 0, 0), v110)), "Ray starts after sphere");
@@ -120,7 +132,8 @@ class SphereTest {
                 "Ray starts before the tangent point");
 
         // TC20: Ray starts at the tangent point
-        assertNull(sphere.findIntersections(new Ray(gp1, new Vector(-1, 1, 0))), "Ray starts at the tangent point");
+        assertNull(sphere.findIntersections(new Ray(gp1, new Vector(-1, 1, 0))),
+                "Ray starts at the tangent point");
 
         // TC21: Ray starts after the tangent point
         assertNull(sphere.findIntersections(new Ray(new Point(2, 0, 0), new Vector(1, -1, 0))),

@@ -6,6 +6,11 @@ import primitives.Ray;
 import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
+/**
+ * Unit tests for the Cylinder class.
+ * Tests the getNormal method to ensure it correctly computes the normal vector
+ * at various points on the cylinder's surface, including its bases and round surface.
+ */
 
 class CylinderTest {
     /**
@@ -46,9 +51,5 @@ class CylinderTest {
                 "TC07: Wrong normal to the center of the top base");
     }
 
-
-    @Test
-    void testFindIntersections() {
-    }
 
 }

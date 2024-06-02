@@ -7,6 +7,12 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Tube class.
+ * Tests the getNormal method to ensure it correctly computes the normal vector
+ * at various points on the tube's surface.
+ */
+
 class TubeTest {
     /**
      * Test method for {@link geometries.Tube#getNormal(Point)}.
@@ -23,7 +29,8 @@ class TubeTest {
                 "ERROR: The calculation of normal to the tube is not calculated correctly");
 
         // TC02: if The vector is normal
-        assertEquals(1,tube.getNormal(new Point(2,1,0)).length() ,0.000001,"Error the vector was not normal");
+        assertEquals(1,tube.getNormal(new Point(2,1,0)).length() ,0.000001,
+                "Error the vector was not normal");
 
 
         // =============== Boundary Values Tests ==================
@@ -34,7 +41,5 @@ class TubeTest {
                 "ZERO vector is not allowed");
     }
 
-    @Test
-    void testFindIntersections() {
-    }
+
 }

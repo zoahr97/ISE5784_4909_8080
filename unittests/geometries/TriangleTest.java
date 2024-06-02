@@ -8,7 +8,12 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Unit tests for the Triangle class.
+ * Tests the getNormal method to ensure it correctly computes the normal vector
+ * and the findIntersections method to ensure it correctly identifies intersection points
+ * with a given ray.
+ */
 class TriangleTest
 {
     /**
@@ -42,7 +47,8 @@ class TriangleTest
 
         // TC01:   Ray intersect inside Triangle
         Point p = new Point(1.1195516811955168,0.9464508094645081,1.2453300124533);
-        List<Point> result = triangle.findIntersections(new Ray(new Point(1, 0, 0), new Vector(0.12, 0.95, 1.25)));
+        List<Point> result = triangle.findIntersections(new Ray(new Point(1, 0, 0),
+                new Vector(0.12, 0.95, 1.25)));
         assertEquals(List.of(p), result, "wrong point values");
 
         // TC02: Ray intersect outside Triangle against edge

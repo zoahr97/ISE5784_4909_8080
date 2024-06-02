@@ -8,7 +8,11 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Unit tests for the Plane class.
+ * Tests the findIntersections method to ensure it correctly finds intersection points
+ * between a given ray and a plane.
+ */
 class PlaneTest {
 
     @Test
@@ -18,12 +22,14 @@ class PlaneTest {
         Point p1 = new Point( 1,  2, 3);
         Point p2 = new Point( 1,  2,  3);
         Point p3= new Point( 2,  3,  4);
-        assertThrows (IllegalArgumentException.class, ()->new Plane (p1, p2, p3), "ERROR: two points are the same");
+        assertThrows (IllegalArgumentException.class, ()->new Plane (p1, p2, p3),
+                "ERROR: two points are the same");
         //TC11: three points are on the same line
         Point p4 = new Point(1,  1,  1);
         Point p5 = new Point( 1,  1,  2);
         Point p6 = new Point( 1,  1,  3);
-        assertThrows (IllegalArgumentException.class, () -> new Plane (p4, p5, p6), "ERROR: three points are on the same line");
+        assertThrows (IllegalArgumentException.class, () -> new Plane (p4, p5, p6),
+                "ERROR: three points are on the same line");
     }
 
 
@@ -39,9 +45,11 @@ class PlaneTest {
         Point p3= new Point( 3,  4, 6);
         Plane plane = new Plane (p1, p2, p3);
         Vector vec = (new Vector ( 1, -1, 0)).normalize();
-        assertTrue((plane.getNormal().equals (vec) || plane.getNormal().equals (vec.scale(  -1.0))),  "ERROR: getNormal() wrong value");
+        assertTrue((plane.getNormal().equals (vec) || plane.getNormal().equals (vec.scale(  -1.0))),
+                "ERROR: getNormal() wrong value");
         //TC02 if the vector is normal
-        assertEquals( 1, plane.getNormal().length(),  0.000001,  "ERROR: the vector was not normal");
+        assertEquals( 1, plane.getNormal().length(),  0.000001,
+                "ERROR: the vector was not normal");
     }
 
     @Test
@@ -72,7 +80,8 @@ class PlaneTest {
 
         //TC13: Ray is orthogonal to the plane and p0 before the plane
         Ray r5 = new Ray(new Point(0, 3, 0), new Vector(-1, -1, 1));
-        assertEquals(List.of(new Point(-1.3333333333333335, 1.6666666666666665, 1.3333333333333335)), p1.findIntersections(r5),
+        assertEquals(List.of(new Point(-1.3333333333333335, 1.6666666666666665, 1.3333333333333335)),
+                p1.findIntersections(r5),
                 "findIntersections() for orthogonal Ray before the plane is wrong");
 
         //TC14: Ray is orthogonal to the plane and p0 in the plane
