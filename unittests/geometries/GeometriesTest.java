@@ -30,20 +30,25 @@ class GeometriesTest {
         geometry.add(new Tube(1,new Ray(new Point(0,0,1),new Vector(0,0,1))));
         // ============ Equivalence Partitions Tests ==============
         // TC01: some of the geometries intersect with the ray
-        assertEquals(3,geometry.findIntersections(new Ray(new Point(0,0,0),new Vector(1,1,1))).size(),"more then one intsersections");
+        assertEquals(3,geometry.findIntersections(new Ray(new Point(0,0,0),new Vector(1,1,1))).size(),
+                "more then one intsersections");
 
         // =============== Boundary Values Tests ==================
         // TC02: no geometry intersect with the ray
-        assertNull(geometry.findIntersections(new Ray(new Point(10,10,10),new Vector(0,0,1))), "Ray does not intersect with any geometry");
+        assertNull(geometry.findIntersections(new Ray(new Point(10,10,10),new Vector(0,0,1))),
+                "Ray does not intersect with any geometry");
 
         // TC03: only one geometry intersect with the ray
-        assertEquals(1,geometry.findIntersections(new Ray(new Point(0,0,0),new Vector(0,0,1))).size(),"one intsersections");
+        assertEquals(1,geometry.findIntersections(new Ray(new Point(0,0,0),new Vector(0,0,1))).size(),
+                "one intsersections");
 
         // TC04: all geometries intersect with the ray
-        assertEquals(4,geometry.findIntersections(new Ray(new Point(-2,-2,-2),new Vector(1,1,1))).size(),"all intsersections");
+        assertEquals(4,geometry.findIntersections(new Ray(new Point(-2,-2,-2),new Vector(1,1,1))).size()
+                ,"all intsersections");
 
         // TC05: empty list
-        assertNull(geometry.findIntersections(new Ray(new Point(10,10,10),new Vector(0,0,1))), "empty list");
+        assertNull(geometry.findIntersections(new Ray(new Point(10,10,10),new Vector(0,0,1))),
+                "empty list");
     }
 
 }
