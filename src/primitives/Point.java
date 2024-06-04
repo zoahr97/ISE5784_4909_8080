@@ -40,11 +40,14 @@ public class Point {
         this.xyz = xyz;
     }
 
+    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         return obj instanceof Point other && xyz.equals(other.xyz);
     }
+
 
     @Override
     public String toString() {
