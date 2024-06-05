@@ -72,4 +72,7 @@ public class Ray {
     }
 
 
+    public Ray get(int i) {
+        return new Ray(head.add(direction.scale(i)), direction.scale(i));
+    }
 }

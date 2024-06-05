@@ -6,12 +6,17 @@ import primitives.Vector;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
+/**
+ * Represents a camera used for rendering scenes.
+ */
 public class Camera implements Cloneable {
-    private Point position; // Camera location
+    private Point p0; // Camera location
     private Vector vUp; // Upward direction
     private Vector vTo; // Forward direction
     private Vector vRight; // Right direction
@@ -19,162 +24,239 @@ public class Camera implements Cloneable {
     private double height = 0;
     private double width = 0;
     private double distance = 0;
-    private int antiAliasing = 1
-            ;
-    public Camera setAntiAliasing(int nRays){
-        antiAliasing = nRays;
-        return this;
-    }
-    public Point getPosition() {
-        return position;
+    //private double antiAliasing = 1;
+
+    /**
+     * constructor with three parameters
+     * @param p0 The origin point of the camera
+     * @param vUp The vector pointing upwards
+     * @param vTo The vector pointing towards the object
+     */
+    public Camera(Point p0, Vector vUp, Vector vTo) {
+        this.p0 = p0;
+        this.vUp = vUp;
+        this.vTo = vTo;
+        vRight = vTo.crossProduct(vUp).normalize();
     }
 
+    /**
+     * Gets the position of the camera.
+     *
+     * @return The camera's position.
+     */
+    public Point getPosition() {
+        return p0;
+    }
+
+    /**
+     * Gets the forward direction of the camera.
+     *
+     * @return The camera's forward direction.
+     */
     public Vector getvTo() {
         return vTo;
     }
 
+    /**
+     * Gets the right direction of the camera.
+     *
+     * @return The camera's right direction.
+     */
     public Vector getvRight() {
-        return vRight;
+        return vRight.normalize();
     }
 
+    /**
+     * Gets the height of the viewport.
+     *
+     * @return The height of the viewport.
+     */
     public double getHeight() {
         return height;
     }
 
+    /**
+     * Gets the upward direction of the camera.
+     *
+     * @return The camera's upward direction.
+     */
     public Vector getvUp() {
-        return vUp;
+        return vUp.normalize();
     }
 
+    /**
+     * Gets the distance from the camera to the viewport.
+     *
+     * @return The distance to the viewport.
+     */
     public double getDistance() {
         return distance;
     }
 
+    /**
+     * Gets the width of the viewport.
+     *
+     * @return The width of the viewport.
+     */
     public double getWidth() {
         return width;
     }
 
-    public void setLocation(Point point) {
-        position = point;
-    }
-
-    public void setDirection(Vector vTo, Vector vUp) {
-        if (vTo.dotProduct(vUp) == 0) {
-            this.vTo = vTo.normalize();
-            this.vUp = vUp.normalize();
-        }
-        return;
-    }
-/*
-    public void setVpSize(double width, double height) {
-        this.width = width;
-        this.height = height;
-    }
-    */
-
-    public Camera setVPSize(double width, double height) {
-        this.width = width;
-        this.height = height;
-        return this;
-    }
-    /*
-    public void setVpDistance(double distance) {
-        this.distance = distance;
-    }
-    */
-
-    public Camera setVPDistance(double distance) {
-        this.distance = distance;
-        // every time that we change the distance from the view plane
-        // we will calculate the center point of the view plane again
-        centerPoint = position.add(vTo.scale(this.distance));
-        return this;
-    }
-    private Camera() {
-    }
     /**
-     * Constructs a camera with the given location, forward direction, and upward direction.
-     * The upward direction must be orthogonal to the forward direction.
+     * Gets a builder for creating a camera.
      *
-     * @param p0  The location of the camera.
-     * @param vTo The forward direction of the camera.
-     * @param vUp The upward direction of the camera.
-     * @throws IllegalArgumentException If the upward direction is not orthogonal to the forward direction.
+     * @return A new instance of the builder.
      */
-    public Camera(Point p0, Vector vTo, Vector vUp) throws IllegalArgumentException {
-        if (!isZero(vTo.dotProduct(vUp))) {
-            throw new IllegalArgumentException("The vectors are not orthogonal");
-        }
-        this.position = p0;
-        this.vUp = vUp.normalize();
-        this.vTo = vTo.normalize();
-        /** If two vectors are normalized (i.e., their magnitudes are equal to 1),
-         *  then their dot product will result in a vector whose magnitude is between 0 and 1.
-         *  Taking the absolute value of this vector will result in a normalized vector.*/
-        this.vRight = vTo.crossProduct(vUp);
-    }
     public static Builder getBuilder() {
         return new Builder();
     }
 
-    /*public Ray constructRay(int nX, int nY, int j, int i) {
-        return null;
+    public Camera() {
     }
-   */
+
+    @Override
+    public Camera clone() {
+        try {
+            Camera clone = (Camera) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    /**
+     * Constructs a ray through a specified pixel in the view plane.
+     *
+     * @param nx the number of horizontal pixels in the view plane
+     * @param ny the number of vertical pixels in the view plane
+     * @param j  the horizontal index of the pixel (0-based)
+     * @param i  the vertical index of the pixel (0-based)
+     * @return a Ray object that starts at the camera position and goes through the specified pixel
+     */
+    public Ray constructRay(int nx, int ny, int j, int i) {
+        // Calculate the center point of the view plane
+        centerPoint = p0.add(vTo.scale(distance));
+
+        // Calculate the height and width of a single pixel
+        double Ry = alignZero(height / ny);
+        double Rx = alignZero(width / nx);
+
+        // Calculate the x and y coordinates of the pixel relative to the center of the view plane
+        double xj = alignZero((j - (nx - 1) / 2.0) * Rx);
+        double yi = alignZero(-(i - (ny - 1) / 2.0) * Ry);
+
+        // Initialize the point pij to the center point of the view plane
+        Point pij = centerPoint;
+
+        // Adjust pij by the horizontal offset
+        if (!isZero(xj))
+            pij = pij.add(vRight.scale(xj));
+
+        // Adjust pij by the vertical offset
+        if (!isZero(yi))
+            pij = pij.add(vUp.scale(yi));
+
+        // Create the direction vector from the camera position to the pixel point and normalize it
+        Vector vij = pij.subtract(p0).normalize();
+
+        // Return a new Ray from the camera position in the direction of the pixel point
+        return new Ray(p0, vij);
+    }
+
+    /**
+     * Builder class for constructing camera objects.
+     */
     public static class Builder {
         private Camera camera;
-
-        public Builder() {
-        }
-
-        public Builder(Camera camera) {
-            this.camera = camera;
-        }
-    }
-    private Point getCenterOfPixel(int nX, int nY, int j, int i) {
-        // calculate the ratio of the pixel by the height and by the width of the view plane
-        // the ratio Ry = h/Ny, the height of the pixel
-        double rY = alignZero(height / nY);
-        // the ratio Rx = w/Nx, the width of the pixel
-        double rX = alignZero(width / nX);
-
-        // Xj = (j - (Nx -1)/2) * Rx
-        double xJ = alignZero((j - ((nX - 1d) / 2d)) * rX);
-        // Yi = -(i - (Ny - 1)/2) * Ry
-        double yI = alignZero(-(i - ((nY - 1d) / 2d)) * rY);
-
-        Point pIJ = centerPoint;
-
-        if (!isZero(xJ)) {
-            pIJ = pIJ.add(vRight.scale(xJ));
-        }
-        if (!isZero(yI)) {
-            pIJ = pIJ.add(vUp.scale(yI));
-        }
-        return pIJ;
-    }
-    public List<Ray> constructRays(int nX, int nY, int j, int i) {
-        List<Ray> rays = new LinkedList<>();
-        Point centralPixel = getCenterOfPixel(nX, nY, j, i);
-        double rY = height / nY / antiAliasing;
-        double rX = width / nX / antiAliasing;
-        // Variables to store the X and Y offsets of each sub-pixel within the anti-aliasing grid
-        double x, y;
-
-        for (int rowNumber = 0; rowNumber < antiAliasing; rowNumber++) {
-            for (int colNumber = 0; colNumber < antiAliasing; colNumber++) {
-                // Calculate the X and Y offsets for the current sub-pixel
-                y = -(rowNumber - (antiAliasing - 1d) / 2) * rY;
-                x = (colNumber - (antiAliasing - 1d) / 2) * rX;
-                // Calculate the position of the current sub-pixel within the pixel
-                Point pIJ = centralPixel;
-                if (y != 0) pIJ = pIJ.add(vUp.scale(y));
-                if (x != 0) pIJ = pIJ.add(vRight.scale(x));
-                // Construct a ray from the camera position to the current sub-pixel
-                rays.add(new Ray(position, pIJ.subtract(position)));
+        /**
+         * Sets the width and height of the viewport.
+         *
+         * @param width  The width of the viewport.
+         * @param height The height of the viewport.
+         * @return The current camera instance.
+         * @throws IllegalArgumentException If width or height is not positive.
+         */
+        public Builder setVpSize(double width, double height) {
+            if (width <= 0 || height <= 0) {
+                throw new IllegalArgumentException("width and height must be greater than 0");
             }
+            this.camera.width = width;
+            this.camera.height = height;
+            return this;
         }
-        return rays;
-    }
 
+
+        /**
+         * Sets the distance from the camera to the viewport.
+         *
+         * @param distance The distance to set.
+         * @return The current camera instance.
+         * @throws IllegalArgumentException If the distance is negative.
+         */
+        public Builder setVpDistance(int distance) {
+            if (distance < 0) {
+                throw new IllegalArgumentException("distance has to be positive");
+            }
+            this.camera.distance = distance;
+            return this;
+        }
+        /**
+         * Sets the location of the camera.
+         *
+         * @param point The location to set.
+         * @return The current camera instance.
+         */
+        public Builder setLocation(Point point) {
+            this.camera.p0 = point;
+            return this;
+        }
+
+        /**
+         * Sets the forward and upward directions of the camera.
+         *
+         * @param vTo The forward direction.
+         * @param vUp The upward direction.
+         * @return The current camera instance.
+         * @throws IllegalArgumentException If the directions are not orthogonal.
+         */
+        public Builder setDirection(Vector vTo, Vector vUp) {
+            if (!isZero(vTo.dotProduct(vUp))) {
+                throw new IllegalArgumentException("vTo have to be orthogonal to vUp");
+            }
+            this.camera.vTo = vTo.normalize();
+            this.camera.vUp = vUp.normalize();
+            return this;
+        }
+
+        /**
+         * Default constructor for the builder.
+         */
+        public Builder() {
+            camera = new Camera();
+        }
+        /**
+         * Constructs the camera object.
+         *
+         * @return A cloned instance of the camera.
+         * @throws CloneNotSupportedException If cloning is not supported.
+         */
+        public Camera build() throws CloneNotSupportedException {
+            String miss = "Missing rendering data";
+            String cs = "Camera";
+            if (isZero(camera.height))
+                throw new MissingResourceException(miss, cs, "height");
+            if (isZero(camera.width))
+                throw new MissingResourceException(miss, cs, "width");
+            if (isZero(camera.distance))
+                throw new MissingResourceException(miss, cs, "distance");
+           camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.centerPoint=camera.p0.add(camera.vTo.scale(camera.distance));
+            // Cloning and returning the camera
+            return (Camera) camera.clone();
+        }
+
+    }
 
 }
+
