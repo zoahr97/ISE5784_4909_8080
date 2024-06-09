@@ -34,10 +34,10 @@ public class Triangle extends Polygon {
      *         or null if there are no intersections.
      */
     public List<Point> findIntersections(Ray ray) {
-        // Find intersections with the plane containing the triangle
-        List<Point> intersections = plane.findIntersections(ray);
-        // If there are no intersections with the plane, return null
-        if (intersections == null) {
+        // Find intersection with the plane containing the triangle
+        List<Point> intersection = plane.findIntersections(ray);
+        // If there are no intersection with the plane, return null
+        if (intersection == null) {
             return null;
         }
 
@@ -63,7 +63,7 @@ public class Triangle extends Polygon {
 
         // Check if the intersection point is inside the triangle
         if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
-            return List.of(intersections.get(0));
+            return intersection;
         }
 
         // If the ray intersects the plane but not the triangle
