@@ -4,38 +4,29 @@ import geometries.Geometries;
 import lighting.AmbientLight;
 import primitives.Color;
 
-import java.util.LinkedList;
-import java.util.List;
-
+/**
+ * The Scene class represents a scene in a 3D environment, containing geometries, ambient light, background color, and a name.
+ */
 public class Scene {
-    public String name;
-    public Color background;
-    public AmbientLight ambientLight;
-    public Geometries geometries;
+    public String name; // The name of the scene
+    public Color background = Color.BLACK; // The background color of the scene, default is black
+    public AmbientLight ambientLight = AmbientLight.NONE; // The ambient light of the scene, default is none
+    public Geometries geometries = new Geometries(); // The geometries in the scene
 
-
-
+    /**
+     * Constructs a Scene with a given name.
+     *
+     * @param name the name of the scene
+     */
     public Scene(String name) {
         this.name = name;
-        this.background = Color.BLACK;
-        this.ambientLight = AmbientLight.NONE;
-        this.geometries = new Geometries();
     }
 
     /**
-     * set the Background color of the scene
-     * @param background the color to set
-     * @return this Scene
-     */
-    public Scene setBackground(Color background) {
-        this.background = background;
-        return this;
-    }
-
-    /**
-     * set the ambientLight of the scene
-     * @param ambientLight the AmbientLight to set
-     * @return this Scene
+     * Sets the ambient light of the scene.
+     *
+     * @param ambientLight the ambient light of the scene
+     * @return the current Scene instance
      */
     public Scene setAmbientLight(AmbientLight ambientLight) {
         this.ambientLight = ambientLight;
@@ -43,15 +34,24 @@ public class Scene {
     }
 
     /**
-     * set the geometries of the scene
-     * @param geometries the geometries to set
-     * @return this Scene
+     * Sets the geometries in the scene.
+     *
+     * @param geometries the geometries in the scene
+     * @return the current Scene instance
      */
     public Scene setGeometries(Geometries geometries) {
         this.geometries = geometries;
         return this;
     }
 
-
-
+    /**
+     * Sets the background color of the scene.
+     *
+     * @param color the background color of the scene
+     * @return the current Scene instance
+     */
+    public Scene setBackground(Color color) {
+        this.background = color;
+        return this;
+    }
 }

@@ -3,25 +3,44 @@ package lighting;
 import primitives.Color;
 import primitives.Double3;
 
+/**
+ * The AmbientLight class represents ambient lighting in a scene.
+ * It defines the ambient light's intensity based on initial intensity and a scaling factor.
+ */
 public class AmbientLight {
+    private final Color intensity;
 
-    // שדה עצמת תאורת מילוי
-    private  Color intensity=Color.BLACK;
     /**
-     * construct the ambient light using a color, and it's attenuation factor with dad constructor.
-     * @param Ia the base intensity of the light
-     * @param Ka the attenuation factor of the intensity for each rgb color
+     * A constant representing no ambient light.
      */
-    public AmbientLight(Color Ia, Double3 Ka) {
-      intensity =  Ia.scale(Ka);
-    }
-    public AmbientLight(Color Ia, Double Ka) {
-        intensity =  Ia.scale(Ka);
-    }
-    public static final AmbientLight NONE = new AmbientLight(Color.BLACK, Double3.ZERO);
+    public static final AmbientLight NONE = new AmbientLight(Color.BLACK, 0);
 
+    /**
+     * Constructs an AmbientLight with given intensity and scaling factor.
+     *
+     * @param Ia the initial intensity of the ambient light
+     * @param ka the scaling factor (as Double3) for the intensity
+     */
+    public AmbientLight(Color Ia, Double3 ka) {
+        this.intensity = Ia.scale(ka);
+    }
+
+    /**
+     * Constructs an AmbientLight with given intensity and scaling factor.
+     *
+     * @param Ia the initial intensity of the ambient light
+     * @param ka the scaling factor (as double) for the intensity
+     */
+    AmbientLight(Color Ia, double ka) {
+        this.intensity = Ia.scale(ka);
+    }
+
+    /**
+     * Gets the intensity of the ambient light.
+     *
+     * @return the intensity of the ambient light
+     */
     public Color getIntensity() {
         return intensity;
     }
-
 }

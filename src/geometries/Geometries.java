@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Geometries  implements Intersectable{
 
-    private final List<Intersectable> Geometry = new LinkedList<>();
+    private final List<Intersectable> geometries = new LinkedList<>();
 
     Geometries(){}
 
@@ -16,13 +16,13 @@ public class Geometries  implements Intersectable{
     }
 
     public void add(Intersectable... geometries){
-        Geometry.addAll(List.of(geometries));
+        this.geometries.addAll(List.of(geometries));
 
     }
 
     public List<Point> findIntersections(Ray ray){
         List<Point> Intersection = null;
-        for (Intersectable geometry : Geometry) {
+        for (Intersectable geometry : geometries) {
             List<Point>  i = (geometry.findIntersections(ray));
             if(i!=null){
                 if (Intersection==null){
