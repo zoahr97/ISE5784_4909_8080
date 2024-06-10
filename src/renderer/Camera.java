@@ -1,5 +1,6 @@
 package renderer;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -164,11 +165,19 @@ public class Camera implements Cloneable {
         return new Ray(p0, vij);
     }
 
+    public Builder renderImage() {
+        return new Builder();
+    }
+
+
+
     /**
      * Builder class for constructing camera objects.
      */
     public static class Builder {
         private Camera camera;
+        private ImageWriter imageWriter;
+        private RayTracerBase rayTracer;
         /**
          * Sets the width and height of the viewport.
          *
@@ -185,8 +194,15 @@ public class Camera implements Cloneable {
             this.camera.height = height;
             return this;
         }
+        public Builder setImageWriter(ImageWriter imageWriter) {
+            this.imageWriter = imageWriter;
+            return this;
+        }
 
-
+        public Builder setRayTracer(RayTracerBase rayTracer) {
+            this.rayTracer = rayTracer;
+            return this;
+        }
         /**
          * Sets the distance from the camera to the viewport.
          *
@@ -201,6 +217,23 @@ public class Camera implements Cloneable {
             this.camera.distance = distance;
             return this;
         }
+
+        public void writeToImage() {
+            if (this.imageWriter == null) // the image writer is uninitialized
+                throw new MissingResourceException("imageWriter", "Camera", "The value of imageWriter is null");
+            imageWriter.writeToImage();
+        }
+
+        /*
+        public Camera setVPDistance(double distance) {
+            this.camera.distance = distance;
+            // every time that we change the distance from the view plane
+            // we will calculate the center point of the view plane again
+            this.camera.centerPoint =this.camera.p0.add(this.camera.vTo.scale(this.camera.distance));
+            return this.camera;
+        }
+        */
+
         /**
          * Sets the location of the camera.
          *
@@ -254,6 +287,14 @@ public class Camera implements Cloneable {
             camera.centerPoint=camera.p0.add(camera.vTo.scale(camera.distance));
             // Cloning and returning the camera
             return (Camera) camera.clone();
+        }
+        public void printGrid(int interval, Color color) throws MissingResourceException {
+            if (this.imageWriter == null) // the image writer is uninitialized
+                throw new MissingResourceException("imageWriter", "Camera", "The value of imageWriter is null");
+            for (int i = 0; i < imageWriter.getNy(); i++)
+                for (int j = 0; j < imageWriter.getNx(); j++)
+                    if (i % interval == 0 || j % interval == 0)  // color the grid
+                        imageWriter.writePixel(j, i, color);
         }
 
     }
