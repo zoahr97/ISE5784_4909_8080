@@ -54,53 +54,47 @@ public class RenderTests {
               .writeToImage();
    }
 
-   /** Test for XML based scene - for bonus */
-//   @Test
-//   public void basicRenderXml() throws CloneNotSupportedException {
-//     // enter XML file name and parse from XML file into scene object
-//    // using the code you added in appropriate packages
-//     // ...
-//      // NB: unit tests is not the correct place to put XML parsing code
-//      Scene scene = XMLSceneReader.readSceneFromXML("renderTestTwoColors.xml");
-//      assertEquals("Scene name is incorrect", "Scene from XML", scene.name);
-//
-//      // בדיקת תקינות צבע הרקע
-//      Color backgroundColor = scene.background;
-//      assertNotNull("Background color is null", backgroundColor);
-//      assertEquals(backgroundColor,new Color(75, 127, 190),"Background color is incorrect");
-//
-//      // בדיקת תקינות התאורת האמביינטית
-//      AmbientLight ambientLight = scene.ambientLight;
-//      assertNotNull("Ambient light is null", ambientLight);
-//      assertEquals(ambientLight.getIntensity(),new Color(255, 191, 191),"Ambient light color is incorrect");
-//      // בדיקה נוספת של הערך K של התאורה האמביינטית
-//      assertEquals(ambientLight.getIntensity(),new Double3(1.0),"Ambient light K value is incorrect" );
-//
-//      // בדיקת תקינות הגיאומטריות
-//      assertEquals( 4, scene.geometries,"Number of geometries is incorrect");
-//      // בדיקת תקינות כל גיאומטריה
-//      // לדוגמה:
-//      // assertEquals("Sphere center is incorrect", new Double3(0, 0, -100), scene.geometries.get(0).getCenter());
-//      // assertEquals("Sphere radius is incorrect", 50, scene.geometries.get(0).getRadius());
-//
-//      // אם כל הבדיקות עוברות, הטסט עובר
-//
-//
-//
-//
-//      camera
-//        .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
-//        .build()
-//         .renderImage()
-//        .printGrid(100, new Color(YELLOW))
-//        .writeToImage();
-//   }
-//}
-//
-//
-//
-//
-//
-//
-//
+//   /** Test for XML based scene - for bonus */
+////   @Test
+////   public void basicRenderXml() throws CloneNotSupportedException {
+////     // enter XML file name and parse from XML file into scene object
+////    // using the code you added in appropriate packages
+////     // ...
+////      // NB: unit tests is not the correct place to put XML parsing code
+////      Scene scene = XMLSceneReader.readSceneFromXML("renderTestTwoColors.xml");
+////      assertEquals("Scene name is incorrect", "Scene from XML", scene.name);
+////
+////      // בדיקת תקינות צבע הרקע
+////      Color backgroundColor = scene.background;
+////      assertNotNull("Background color is null", backgroundColor);
+////      assertEquals(backgroundColor,new Color(75, 127, 190),"Background color is incorrect");
+////
+////      // בדיקת תקינות התאורת האמביינטית
+////      AmbientLight ambientLight = scene.ambientLight;
+////      assertNotNull("Ambient light is null", ambientLight);
+////      assertEquals(ambientLight.getIntensity(),new Color(255, 191, 191),"Ambient light color is incorrect");
+////      // בדיקה נוספת של הערך K של התאורה האמביינטית
+////      assertEquals(ambientLight.getIntensity(),new Double3(1.0),"Ambient light K value is incorrect" );
+////
+////      // בדיקת תקינות הגיאומטריות
+////      assertEquals( 4, scene.geometries,"Number of geometries is incorrect");
+////      // בדיקת תקינות כל גיאומטריה
+////      // לדוגמה:
+////      // assertEquals("Sphere center is incorrect", new Double3(0, 0, -100), scene.geometries.get(0).getCenter());
+////      // assertEquals("Sphere radius is incorrect", 50, scene.geometries.get(0).getRadius());
+////
+////      // אם כל הבדיקות עוברות, הטסט עובר
+////
+////
+////
+////
+////      camera
+////        .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
+////        .build()
+////         .renderImage()
+////        .printGrid(100, new Color(YELLOW))
+////        .writeToImage();
+////   }
+////}
+
 }
