@@ -6,6 +6,7 @@ import primitives.Color;
 import static org.junit.jupiter.api.Assertions.*;
 /**
  * This class is responsible for writing an image with a grid pattern.
+ * @author Dvora and Zohar
  */
 class ImageWriterTest {
 
