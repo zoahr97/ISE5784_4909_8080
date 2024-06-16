@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -17,6 +18,9 @@ import static primitives.Util.isZero;
  */
 
 public class Sphere extends RadialGeometry {
+    public double getRasdius(){
+        return radius;
+    }
     /**
      * The center point of the sphere.
      */
@@ -86,5 +90,9 @@ public class Sphere extends RadialGeometry {
         } else {
             return null; // No intersection, both t1 and t2 are non-positive
         }
+    }
+
+    public Point getCenter() {
+        return center;
     }
 }

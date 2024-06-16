@@ -18,7 +18,7 @@ public class Color {
    public static final Color BLACK = new Color();
 
    /** Default constructor - to generate Black Color (privately) */
-   private Color() { rgb = Double3.ZERO; }
+   public Color() { rgb = Double3.ZERO; }
 
    /**
     * Constructor to generate a color according to RGB components Each component
