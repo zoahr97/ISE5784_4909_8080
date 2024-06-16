@@ -61,7 +61,7 @@ public class RenderTests {
     @Test
     public void renderXmlScene() throws CloneNotSupportedException {
         // Read the scene from XML file
-        Scene scene2 = XMLSceneReader.readSceneFromXML("C:\\Users\\enava\\ISE5784_4909_8080\\resources\\renderTestTwoColors.xml");
+        Scene scene2 = XMLSceneReader.readSceneFromXML("C:\\Users\\User\\IdeaProjects\\ISE5784_4909_8080\\resources\\renderTestTwoColors.xml");
 
         // Perform assertions based on XML data
         assertNotNull(scene2);
