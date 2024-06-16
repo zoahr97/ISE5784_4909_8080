@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import scene.Scene;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,6 +28,7 @@ class IntegrationTest {
      * @param sum the initial sum of intersections
      * @return the total sum of intersections
      */
+    private final Scene scene = new Scene("Test scene");
     private int helper(Camera camera, Intersectable shape, int sum) {
         Geometries geo = new Geometries();
         geo.add(shape);
@@ -44,19 +46,22 @@ class IntegrationTest {
     String expection1 = "Number of intersections is incorrect";
 
     private final Camera.Builder cameraBuilder1 = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
             .setLocation(Point.ZERO)
             .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
-            .setVpDistance(1);
+            .setVpDistance(1).setImageWriter(new ImageWriter("base render test", 1000, 1000));
 
     private final Camera.Builder cameraBuilder2 = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
             .setLocation(new Point(0, 0, 0.5))
             .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
-            .setVpDistance(1);
+            .setVpDistance(1).setImageWriter(new ImageWriter("base render test", 1000, 1000));
 
     private final Camera.Builder cameraBuilder3 = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
             .setLocation(Point.ZERO)
             .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
-            .setVpDistance(1);
+            .setVpDistance(1).setImageWriter(new ImageWriter("base render test", 1000, 1000));
 
     IntegrationTest() throws CloneNotSupportedException {
     }
@@ -100,8 +105,7 @@ class IntegrationTest {
         assertEquals(2, sum, expection1);
     }
 
-    public void main() {
-    }
+
 
     /**
      * Test method to validate intersection calculations with planes.
