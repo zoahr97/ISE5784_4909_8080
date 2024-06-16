@@ -1,4 +1,5 @@
 package renderer;
+
 import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,9 +11,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import primitives.Color;
 import primitives.Double3;
+import primitives.Point;
 import scene.Scene;
+import geometries.Sphere;
+import geometries.Triangle;
 
 public class XMLSceneReader {
+
+    /**
+     * Reads a scene from an XML file and returns a Scene object.
+     *
+     * @param filePath the path to the XML file
+     * @return a Scene object constructed from the XML data
+     */
     public static Scene readSceneFromXML(String filePath) {
         try {
             File inputFile = new File(filePath);
@@ -40,11 +51,10 @@ public class XMLSceneReader {
                     Element element = (Element) node;
                     switch (element.getTagName()) {
                         case "sphere":
-                            // Parse sphere attributes and add to scene
-                            // Example: double x = Double.parseDouble(element.getAttribute("center").split(" ")[0]);
+                            parseAndAddSphere(element, scene);
                             break;
                         case "triangle":
-                            // Parse triangle attributes and add to scene
+                            parseAndAddTriangle(element, scene);
                             break;
                         // Add cases for other geometries if needed
                     }
@@ -58,6 +68,54 @@ public class XMLSceneReader {
         }
     }
 
+    /**
+     * Parses a sphere element and adds it to the scene.
+     *
+     * @param element the sphere element
+     * @param scene the scene to add the sphere to
+     */
+    private static void parseAndAddSphere(Element element, Scene scene) {
+        double radius = Double.parseDouble(element.getAttribute("radius"));
+        String[] centerCoords = element.getAttribute("center").split(" ");
+        Point center = new Point(Double.parseDouble(centerCoords[0]),
+                Double.parseDouble(centerCoords[1]),
+                Double.parseDouble(centerCoords[2]));
+        Sphere sphere = new Sphere(center, radius);
+        scene.geometries.add(sphere);
+    }
+
+    /**
+     * Parses a triangle element and adds it to the scene.
+     *
+     * @param element the triangle element
+     * @param scene the scene to add the triangle to
+     */
+    private static void parseAndAddTriangle(Element element, Scene scene) {
+        String[] p0Coords = element.getAttribute("p0").split(" ");
+        Point p0 = new Point(Double.parseDouble(p0Coords[0]),
+                Double.parseDouble(p0Coords[1]),
+                Double.parseDouble(p0Coords[2]));
+
+        String[] p1Coords = element.getAttribute("p1").split(" ");
+        Point p1 = new Point(Double.parseDouble(p1Coords[0]),
+                Double.parseDouble(p1Coords[1]),
+                Double.parseDouble(p1Coords[2]));
+
+        String[] p2Coords = element.getAttribute("p2").split(" ");
+        Point p2 = new Point(Double.parseDouble(p2Coords[0]),
+                Double.parseDouble(p2Coords[1]),
+                Double.parseDouble(p2Coords[2]));
+
+        Triangle triangle = new Triangle(p0, p1, p2);
+        scene.geometries.add(triangle);
+    }
+
+    /**
+     * Parses a color string in the format "R G B" and returns a Color object.
+     *
+     * @param colorString the color string
+     * @return a Color object
+     */
     private static Color parseColor(String colorString) {
         String[] components = colorString.split(" ");
         int r = Integer.parseInt(components[0]);
@@ -66,4 +124,3 @@ public class XMLSceneReader {
         return new Color(r, g, b);
     }
 }
-
