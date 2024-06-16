@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * IntegrationTest class is responsible for conducting integration tests
  * to validate the intersection calculations between rays and various geometric shapes.
+ * @author Dvora and Zohar
  */
 @Nested
 class IntegrationTest {

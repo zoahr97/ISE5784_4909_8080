@@ -56,7 +56,8 @@ public class RenderTests {
 
     /**
      * Unit test for XMLSceneReader class.
-     */
+     * * @author Dvora and zohar */
+
     @Test
     public void renderXmlScene() throws CloneNotSupportedException {
         // Read the scene from XML file
