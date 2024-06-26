@@ -3,6 +3,7 @@ package geometries;
 import java.util.ArrayList;
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 import primitives.Point;
@@ -15,7 +16,7 @@ import primitives.Vector;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -94,36 +95,53 @@ public class Polygon implements Geometry {
         return plane.getNormal();
     }
 
-    @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> intersections = plane.findIntersections(ray);
-        //if there are no intersections with the plane, there are no intersections with the polygon
-        if (intersections == null) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        Point p0 = ray.getHead();
+        Vector v = ray.getDirection();
+        Plane plane = this.plane;
+        Vector normal = plane.getNormal();
+        Point q = plane.getQ();
+
+        // Check if ray is parallel to the plane or lies on the plane
+        double nv = normal.dotProduct(v);
+        if (isZero(nv)) {
             return null;
         }
 
-        Point checkPoint = intersections.get(0);
-        List<Vector> result = new ArrayList<>();
-        Point last = vertices.get(size - 1);
-        //we will use the method of ni=(pi-pi-1)x(pi-1-Pinter) to check if the point is inside the polygon
+        // Find the intersection point t on the plane
+        double t = alignZero(normal.dotProduct(q.subtract(p0)) / nv);
+        if (t <= 0) {
+            return null;
+        }
+
+        Point intersectionPoint = ray.getPoint(t);
+
         try {
-            for (Point p : vertices) {//we will add all  the vectors to the list
-                result.add(p.subtract(last).crossProduct(last.subtract(checkPoint)));
-                last = p;
-            }
-            Vector lastVec = result.getLast();
-            for (Vector v : result) {//we will check if the vectors are in the same direction
-                if (v.dotProduct(lastVec) <= 0) {
+            // Initialize vectors for the first edge and the point to intersection
+            Vector edgeVector = this.vertices.getFirst().subtract(this.vertices.getLast()).normalize();
+            Vector vecToPoint = intersectionPoint.subtract(this.vertices.getLast()).normalize();
+            Vector normalVector = edgeVector.crossProduct(vecToPoint).normalize(); // First vector to compare to others
+
+            for (int i = 0; i < this.vertices.size() - 1; i++) {
+                edgeVector = this.vertices.get(i + 1).subtract(this.vertices.get(i)).normalize();
+                vecToPoint = intersectionPoint.subtract(this.vertices.get(i)).normalize();
+
+                // The point is on the edge
+                if (edgeVector.equals(vecToPoint) || edgeVector.equals(edgeVector.scale(-1))) {
                     return null;
                 }
-                lastVec = v;
+
+                Vector crossVector = edgeVector.crossProduct(vecToPoint).normalize();
+
+                if (normalVector.dotProduct(crossVector) < 0) {
+                    // At least one vector is not the same, the point is outside the polygon
+                    return null;
+                }
             }
-        }
-        //if the point is on the edge of the polygon
-        catch (IllegalArgumentException e) {
+            return List.of(new GeoPoint(this, intersectionPoint)); // The point is inside the polygon
+        } catch (IllegalArgumentException e) {
+            // Exception thrown because the zero vector was constructed (point on a vertex or edge)
             return null;
         }
-        return intersections;
     }
-
 }

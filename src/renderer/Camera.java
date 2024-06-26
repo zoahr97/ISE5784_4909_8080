@@ -25,19 +25,6 @@ public class Camera implements Cloneable {
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
-    /**
-     * constructor with three parameters
-     *
-     * @param p0  The origin point of the camera
-     * @param vUp The vector pointing upwards
-     * @param vTo The vector pointing towards the object
-     */
-    public Camera(Point p0, Vector vUp, Vector vTo) {
-        this.p0 = p0;
-        this.vUp = vUp;
-        this.vTo = vTo;
-        vRight = vTo.crossProduct(vUp).normalize();
-    }
 
     /**
      * Gets the position of the camera.
@@ -111,7 +98,7 @@ public class Camera implements Cloneable {
         return new Builder();
     }
 
-    public Camera() {
+    private Camera() {
     }
 
     @Override
@@ -329,7 +316,7 @@ public class Camera implements Cloneable {
                 throw new MissingResourceException(miss, cs, "imageWriter");
             if(camera.rayTracer == null)
                 throw new MissingResourceException(miss, cs, "rayTracer");
-           camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
             camera.centerPoint=camera.p0.add(camera.vTo.scale(camera.distance));
             // Cloning and returning the camera
             return (Camera) camera.clone();

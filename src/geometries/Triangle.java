@@ -4,8 +4,10 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -24,6 +26,7 @@ public class Triangle extends Polygon {
     public Triangle(Point a, Point b, Point c) {
         super(a, b, c);
     }
+
     /**
      * Finds the intersection points between a given ray and the triangle.
      * This method uses the Möller–Trumbore intersection algorithm to determine
@@ -31,44 +34,44 @@ public class Triangle extends Polygon {
      *
      * @param ray the ray to intersect with the triangle.
      * @return a list of intersection points if the ray intersects the triangle,
-     *         or null if there are no intersections.
+     * or null if there are no intersections.
      */
-    public List<Point> findIntersections(Ray ray) {
-        // Find intersection with the plane containing the triangle
-        List<Point> intersection = plane.findIntersections(ray);
-        // If there are no intersection with the plane, return null
-        if (intersection == null) {
+
+    @Override
+
+
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        Point p0 = ray.getHead(); // The starting point of the ray
+        Vector v = ray.getDirection(); // The direction vector of the ray
+        Plane plane = this.plane;
+
+        if (plane.findGeoIntersectionsHelper(ray) == null)
             return null;
-        }
 
-        // Calculate vectors from the ray's head to each of the triangle's vertices
-        Vector v1 = vertices.get(0).subtract(ray.getHead());
-        Vector v2 = vertices.get(1).subtract(ray.getHead());
-        Vector v3 = vertices.get(2).subtract(ray.getHead());
+        Point intersectionPoint = plane.findGeoIntersectionsHelper(ray).getFirst().point;
 
-        // Calculate normal vectors to the triangle's edges
+        // Vectors from the ray's starting point to the vertices of the triangle
+        Vector v1 = this.vertices.get(0).subtract(p0);
+        Vector v2 = this.vertices.get(1).subtract(p0);
+        Vector v3 = this.vertices.get(2).subtract(p0);
+
+        // Normals to the planes formed by the ray and the triangle's edges
         Vector n1 = v1.crossProduct(v2).normalize();
         Vector n2 = v2.crossProduct(v3).normalize();
         Vector n3 = v3.crossProduct(v1).normalize();
 
-        // Calculate dot products of the ray's direction with the normal vectors
-        double s1 = ray.getDirection().dotProduct(n1);
-        double s2 = ray.getDirection().dotProduct(n2);
-        double s3 = ray.getDirection().dotProduct(n3);
+        // Dot products of the ray's direction with the normals
+        double d1 = alignZero(v.dotProduct(n1));
+        double d2 = alignZero(v.dotProduct(n2));
+        double d3 = alignZero(v.dotProduct(n3));
 
-        // If the ray is parallel to any of the triangle's planes
-        if (isZero(s1) || isZero(s2) || isZero(s3)) {
-            return null;
+        // Check if the ray intersects the triangle
+        // The ray intersects the triangle if all the dot products are either positive or negative
+        if ((d1 > 0 && d2 > 0 && d3 > 0) || (d1 < 0 && d2 < 0 && d3 < 0)) {
+            // If the ray intersects the triangle, find the intersection points with the plane
+            return List.of(new GeoPoint(this, intersectionPoint));
         }
-
-        // Check if the intersection point is inside the triangle
-        if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
-            return intersection;
-        }
-
-        // If the ray intersects the plane but not the triangle
+        // If the ray does not intersect the triangle, return null
         return null;
     }
-
-
 }

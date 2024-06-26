@@ -16,7 +16,7 @@ import static primitives.Util.isZero;
  *
  * @author Dvora Enav and Zohar Tamsut
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
     /**
      * A point on the plane.
@@ -84,6 +84,8 @@ public class Plane implements Geometry {
         return normal;
     }
 
+
+
     /**
      * Finds the intersection points between a ray and the plane.
      * Since a plane is infinite, it may intersect the ray at one point or infinitely many points.
@@ -94,7 +96,7 @@ public class Plane implements Geometry {
      */
     @Override
 
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         //if the ray starts at the plane
         if (ray.getHead().equals(q)) {
             return null;
@@ -112,6 +114,8 @@ public class Plane implements Geometry {
             return null;
         }
         //if the ray intersects the plane
-        return List.of(ray.getPoint(t1));
+        return List.of(new GeoPoint(this,ray.getPoint(t1)));
     }
+
+
 }

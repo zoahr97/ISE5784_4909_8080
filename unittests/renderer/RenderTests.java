@@ -54,36 +54,64 @@ public class RenderTests {
               .writeToImage();
    }
 
-    /**
-     * Unit test for XMLSceneReader class.
-     * * @author Dvora and zohar */
+   /**
+    *
+    *
+    */
+   @Test
+   public void renderMultiColorTest() throws CloneNotSupportedException {
+      scene.geometries.add( // center
+                          new Sphere(new Point(0, 0, -100), 50),
+                           // up left
+                          new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100))
+                              .setEmission(new Color(GREEN)),
+                          // down left
+                          new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100))
+                              .setEmission(new Color(RED)),
+                          // down right
+                          new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))
+                              .setEmission(new Color(BLUE)));
+      scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.2, 0.2, 0.2))); //
 
-    @Test
-    public void renderXmlScene() throws CloneNotSupportedException {
-        // Read the scene from XML file
-        Scene scene2 = XMLSceneReader.readSceneFromXML("C:\\Users\\enava\\ISE5784_4909_8080\\resources\\renderTestTwoColors.xml");
+     camera
+         .setImageWriter(new ImageWriter("color render test", 1000, 1000))
+         .build()
+        .renderImage()
+        .printGrid(100, new Color(WHITE))
+         .writeToImage();
+   }
 
-        // Perform assertions based on XML data
-        assertNotNull(scene2);
-        assertEquals(scene2.name, "Scene from XML", "Scene name is incorrect");
 
-        Color expectedBackgroundColor = new Color(75, 127, 90); // Green color
-        assertEquals(expectedBackgroundColor.getColor(), scene2.background.getColor(), "Background color is incorrect");
+   /**
+    * Unit test for XMLSceneReader class.
+    * * @author Dvora and zohar */
 
-        AmbientLight expectedAmbientLight = new AmbientLight(new Color(255, 191, 191), Double3.ONE);
-        assertEquals(expectedAmbientLight.getIntensity().getColor(), scene2.ambientLight.getIntensity().getColor(), "Ambient light is incorrect");
+   @Test
+   public void renderXmlScene() throws CloneNotSupportedException {
+      // Read the scene from XML file
+      Scene scene2 = XMLSceneReader.readSceneFromXML("C:\\Users\\enava\\ISE5784_4909_8080\\resources\\renderTestTwoColors.xml");
 
-        // Set up the camera and render the image
-        Camera camera2 = Camera.getBuilder()
-                .setRayTracer(new SimpleRayTracer(scene2))
-                .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-                .setVpDistance(100)
-                .setVpSize(500, 500)
-                .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
-                .build();
+      // Perform assertions based on XML data
+      assertNotNull(scene2);
+      assertEquals(scene2.name, "Scene from XML", "Scene name is incorrect");
 
-        camera2.renderImage()
-                .printGrid(100, new Color(YELLOW))
-                .writeToImage();
-    }
+      Color expectedBackgroundColor = new Color(75, 127, 90); // Green color
+      assertEquals(expectedBackgroundColor.getColor(), scene2.background.getColor(), "Background color is incorrect");
+
+      AmbientLight expectedAmbientLight = new AmbientLight(new Color(255, 191, 191), Double3.ONE);
+      assertEquals(expectedAmbientLight.getIntensity().getColor(), scene2.ambientLight.getIntensity().getColor(), "Ambient light is incorrect");
+
+      // Set up the camera and render the image
+      Camera camera2 = Camera.getBuilder()
+              .setRayTracer(new SimpleRayTracer(scene2))
+              .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+              .setVpDistance(100)
+              .setVpSize(500, 500)
+              .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
+              .build();
+
+      camera2.renderImage()
+              .printGrid(100, new Color(YELLOW))
+              .writeToImage();
+   }
 }

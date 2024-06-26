@@ -29,14 +29,15 @@ class IntegrationTest {
      * @return the total sum of intersections
      */
     private final Scene scene = new Scene("Test scene");
-    private int helper(Camera camera, Intersectable shape, int sum) {
-        Geometries geo = new Geometries();
-        geo.add(shape);
+    int nx=3;
+    int ny=3;
+    private int helper(Camera camera, Intersectable geometry) {
+
         sum = 0;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Ray ray = camera.constructRay(3, 3, j, i);
-                var intersections = geo.findIntersections(ray);
+        for (int i = 0; i < nx; i++) {
+            for (int j = 0; j < ny; j++) {
+                Ray ray = camera.constructRay(nx, ny, j, i);
+                var intersections = geometry.findIntersections(ray);
                 sum += (intersections == null) ? 0 : intersections.size();
             }
         }
@@ -72,23 +73,23 @@ class IntegrationTest {
     @Test
     void testSphere() throws CloneNotSupportedException {
         // tc0: Intersection test with a sphere of radius 1 at (0, 0, -3)
-        sum = helper(cameraBuilder1.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -3), 1), 2);
+        sum = helper(cameraBuilder1.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -3), 1));
         assertEquals(2, sum, expection1);
 
         // tc01: Intersection test with a sphere of radius 2.5 at (0, 0, -2.5)
-        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -2.5), 2.5), 18);
+        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -2.5), 2.5));
         assertEquals(18, sum, expection1);
 
         // tc02: Intersection test with a sphere of radius 2 at (0, 0, -2)
-        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -2), 2), 10);
+        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -2), 2));
         assertEquals(10, sum, expection1);
 
         // tc03: Intersection test with a sphere of radius 4 at (0, 0, -3.5)
-        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -3.5), 4), 9);
+        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, -3.5), 4));
         assertEquals(9, sum, expection1);
 
         // tc04: Intersection test with a sphere of radius 0.5 at (0, 0, 1)
-        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, 1), 0.5), 0);
+        sum = helper(cameraBuilder2.setVpSize(3, 3).build(), new Sphere(new Point(0, 0, 1), 0.5));
         assertEquals(0, sum, expection1);
     }
 
@@ -98,10 +99,10 @@ class IntegrationTest {
     @Test
     void testTriangle() throws CloneNotSupportedException {
         // tc01: Intersection test with a triangle
-        sum = helper(cameraBuilder3.setVpSize(3, 3).build(), new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 1);
+        sum = helper(cameraBuilder3.setVpSize(3, 3).build(), new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)));
         assertEquals(1, sum, expection1);
 
-        sum = helper(cameraBuilder3.setVpSize(3, 3).build(), new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 2);
+        sum = helper(cameraBuilder3.setVpSize(3, 3).build(), new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)));
         assertEquals(2, sum, expection1);
     }
 
@@ -115,17 +116,17 @@ class IntegrationTest {
         // Plane 1: 9 Intersection Points
         Camera camera = cameraBuilder3.setVpSize(3, 3).build();
         Plane plane1 = new Plane(new Point(0, 0, -2), new Vector(0, 0, 1));
-        int sum = helper(camera, plane1, 9);
+        int sum = helper(camera, plane1);
         assertEquals(9, sum, expection1);
 
         // Plane 2: 9 Intersection Points
         Plane plane2 = new Plane(new Point(0, 0, -1), new Vector(0, 0, 1));
-        sum = helper(camera, plane2, 9);
+        sum = helper(camera, plane2);
         assertEquals(9, sum, expection1);
 
         // Plane 3: 6 Intersection Points
         Plane plane3 = new Plane(new Point(0, 0, -3), new Vector(0, 1, 1).normalize());
-        sum = helper(camera, plane3, 6);
+        sum = helper(camera, plane3);
         assertEquals(6, sum, expection1);
     }
 }

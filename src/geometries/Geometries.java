@@ -1,6 +1,5 @@
 package geometries;
 
-import primitives.Point;
 import primitives.Ray;
 
 import java.util.*;
@@ -10,7 +9,7 @@ import java.util.*;
  * It implements the Intersectable interface, allowing it to find intersections
  * with a given ray.
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
 
     private final List<Intersectable> geometries = new LinkedList<>();
 
@@ -44,17 +43,18 @@ public class Geometries implements Intersectable {
      * @return a list of intersection points, or null if no intersections are found
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> intersections = null;
-        for (Intersectable geometry : geometries) {
-            List<Point> i = geometry.findIntersections(ray);
-            if (i != null) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        List<GeoPoint> intersections = null;
+        for (Intersectable geometry : this.geometries) {
+            var geoPoints = geometry.findGeoIntersections(ray);
+            if (geoPoints != null) {
                 if (intersections == null) {
                     intersections = new ArrayList<>();
                 }
-                intersections.addAll(i);
+                intersections.addAll(geoPoints);
             }
         }
+
         return intersections;
     }
 }

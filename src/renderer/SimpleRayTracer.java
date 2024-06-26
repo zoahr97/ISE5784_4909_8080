@@ -1,11 +1,15 @@
 package renderer;
 
+import geometries.Intersectable;
+import geometries.Intersectable.GeoPoint;
+import lighting.LightSource;
 import primitives.Color;
-import primitives.Point;
+import primitives.Material;
 import primitives.Ray;
+import primitives.Vector;
 import scene.Scene;
 
-import java.util.List;
+import static primitives.Util.alignZero;
 
 /**
  * SimpleRayTracer is a class that extends RayTracerBase and provides basic
@@ -20,24 +24,68 @@ public class SimpleRayTracer extends RayTracerBase {
     public SimpleRayTracer(Scene scene) {
         super(scene);
     }
-    /**
-     * Calculates the color at a given point in the scene.
-     * This method currently returns the intensity of the ambient light in the scene.
-     *
-     * @param p the point at which to calculate the color
-     * @return the color at the given point, which is the intensity of the ambient light
-     */
-    private Color CalcColor(Point p) {
-       return scene.ambientLight.getIntensity();
-    }
 
     @Override
     public Color traceRay(Ray ray) {
-        List<Point> intersections = scene.geometries.findIntersections(ray);
-        if (intersections==null)
+        var intersections = scene.geometries.findGeoIntersections(ray);
+        if (intersections == null)
             return scene.background;
-        Point closetPoint = ray.findClosestPoint(intersections);
-        return CalcColor(closetPoint);
+        Intersectable.GeoPoint closetPoint = ray.findClosestGeoPoint(intersections);
+        return CalcColor(closetPoint, ray);
+    }
+
+    private Color CalcColor(GeoPoint closetPoint, Ray ray) {
+
+        return scene.ambientLight.getIntensity().add(calcLocalEffects(closetPoint, ray));
+    }
+
+    private Color calcDiffusive(Material material, double nl, Color intensity) {
+        return intensity.scale(material.kD.scale(Math.abs(nl)));
+    }
+
+    private Color calcSpecular(Material material, Vector n, int shininess, double nl, Vector v, Vector l, Color intensity) {
+        Vector r = l.subtract(n.scale(2 * nl)).normalize();
+        double vr = -v.dotProduct(r);
+        vr = Math.max(0, vr);
+        return intensity.scale(material.kS.scale(Math.pow(vr, material.shininess)));
 
     }
+
+
+    private Color calcLocalEffects(GeoPoint gp, Ray ray) {
+        Vector n = gp.geometry.getNormal(gp.point);
+        Vector v = ray.getDirection().normalize();
+        double nv = alignZero(n.dotProduct(v));
+        if (nv == 0) return Color.BLACK;
+
+        Material material = gp.geometry.getMaterial();
+        Color color = gp.geometry.getEmission();
+        for (LightSource lightSource : scene.lights) {
+            Vector l = lightSource.getL(gp.point).normalize();
+            double nl = alignZero(n.dotProduct(l));
+            if (nl * nv > 0) {  // sign(nl) == sign(nv)
+                Color iL = lightSource.getIntensity(gp.point);
+                Color diffusive = calcDiffusive(material, nl, iL);
+                Color specular = calcSpecular(material, n, material.shininess, nl, v, l, iL);
+                color = color.add(diffusive).add(specular);
+            }
+        }
+        return color;
+    }
 }
+
+/**
+ * Calculates the color at a given point in the scene.
+ * This method currently returns the intensity of the ambient light in the scene.
+ *
+ * @param geoPoint the point of the specific geometry at which to calculate the color
+ * @param ray
+ * @return the color at the given point, which is the intensity of the ambient light
+ */
+
+
+
+
+
+
+
