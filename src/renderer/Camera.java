@@ -160,7 +160,7 @@ public class Camera implements Cloneable {
         int ny = imageWriter.getNy();
         for (int i = 0; i < ny; i++) {
             for (int j = 0; j < nx; j++) {
-                  castRay(nx, ny, j, i);
+                castRay(nx, ny, j, i);
 
             }
         }
@@ -180,8 +180,8 @@ public class Camera implements Cloneable {
             throw new IllegalArgumentException("Pixel coordinates out of bounds.");
         }
         Ray ray =constructRay(Nx, Ny, column, row);
-       Color color= rayTracer.traceRay(ray);//calculate the color of the body the ray hurt
-       imageWriter.writePixel(column, row, color);
+        Color color= rayTracer.traceRay(ray);//calculate the color of the body the ray hurt
+        imageWriter.writePixel(column, row, color);
 
     }
     /**
@@ -191,18 +191,18 @@ public class Camera implements Cloneable {
      * @param interval the interval between the grid lines in pixels.
      * @param color the color of the grid lines.
      */
-     public Camera printGrid(int interval, Color color){
-         for (int i = 0; i <imageWriter.getNy(); i++) {
-             for (int j = 0; j < imageWriter.getNx(); j++) {
-                 // Check if the current pixel is on a grid line
-                 if (i % interval == 0 || j % interval == 0) {
-                     imageWriter.writePixel(j, i, color); // Color the pixel on the grid line
-                 }
-             }
-         }
-         imageWriter.writeToImage();
-         return this;
-     }
+    public Camera printGrid(int interval, Color color){
+        for (int i = 0; i <imageWriter.getNy(); i++) {
+            for (int j = 0; j < imageWriter.getNx(); j++) {
+                // Check if the current pixel is on a grid line
+                if (i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(j, i, color); // Color the pixel on the grid line
+                }
+            }
+        }
+        imageWriter.writeToImage();
+        return this;
+    }
 
 
     /**
@@ -325,4 +325,3 @@ public class Camera implements Cloneable {
     }
 
 }
-
