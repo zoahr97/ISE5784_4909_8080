@@ -16,6 +16,7 @@ public class Scene {
     public Color background = Color.BLACK; // The background color of the scene, default is black
     public AmbientLight ambientLight = AmbientLight.NONE; // The ambient light of the scene, default is none
     public Geometries geometries = new Geometries(); // The geometries in the scene
+    // Initializing a new list for light sources
      public List<LightSource> lights = new LinkedList<LightSource>();
 
     /**

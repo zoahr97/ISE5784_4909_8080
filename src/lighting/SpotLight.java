@@ -14,9 +14,10 @@ private Vector direction;
 
 
     /**
+     * Sets the narrow beam angle for the spotlight.
      *
-     * @param narrowBeam
-     * @return
+     * @param narrowBeam the narrow beam angle in degrees.
+     * @return the current SpotLight instance with the updated narrow beam angle.
      */
     public SpotLight setNarrowBeam(double narrowBeam) {
         super.setNarrowBeam(narrowBeam);

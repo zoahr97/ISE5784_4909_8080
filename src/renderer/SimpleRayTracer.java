@@ -25,33 +25,69 @@ public class SimpleRayTracer extends RayTracerBase {
         super(scene);
     }
 
+    /**
+     * Traces a ray and calculates the color of the closest intersection point.
+     *
+     * @param ray the ray to be traced
+     * @return the color of the closest intersection point or the background color if no intersection is found
+     */
     @Override
     public Color traceRay(Ray ray) {
         var intersections = scene.geometries.findGeoIntersections(ray);
         if (intersections == null)
             return scene.background;
-        Intersectable.GeoPoint closetPoint = ray.findClosestGeoPoint(intersections);
-        return CalcColor(closetPoint, ray);
+        Intersectable.GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
+        return CalcColor(closestPoint, ray);
     }
 
-    private Color CalcColor(GeoPoint closetPoint, Ray ray) {
-
-        return scene.ambientLight.getIntensity().add(calcLocalEffects(closetPoint, ray));
+    /**
+     * Calculates the color at the closest intersection point.
+     *
+     * @param closestPoint the closest intersection point
+     * @param ray          the ray that intersects the geometry
+     * @return the color at the closest intersection point
+     */
+    private Color CalcColor(GeoPoint closestPoint, Ray ray) {
+        return scene.ambientLight.getIntensity().add(calcLocalEffects(closestPoint, ray));
     }
 
+    /**
+     * Calculates the diffusive reflection of the light.
+     *
+     * @param material  the material of the geometry
+     * @param nl        the dot product of the normal and light direction vectors
+     * @param intensity the intensity of the light
+     * @return the color of the diffusive reflection
+     */
     private Color calcDiffusive(Material material, double nl, Color intensity) {
         return intensity.scale(material.kD.scale(Math.abs(nl)));
     }
 
+    /**
+     * Calculates the specular reflection of the light.
+     *
+     * @param material  the material of the geometry
+     * @param n         the normal vector at the point
+     * @param shininess the shininess coefficient of the material
+     * @param nl        the dot product of the normal and light direction vectors
+     * @param v         the direction vector of the ray
+     * @param l         the direction vector of the light
+     * @param intensity the intensity of the light
+     * @return the color of the specular reflection
+     */
     private Color calcSpecular(Material material, Vector n, int shininess, double nl, Vector v, Vector l, Color intensity) {
         Vector r = l.subtract(n.scale(2 * nl)).normalize();
-        double vr = -v.dotProduct(r);
-        vr = Math.max(0, vr);
+        double vr = Math.max(0, -v.dotProduct(r));
         return intensity.scale(material.kS.scale(Math.pow(vr, material.shininess)));
-
     }
 
-
+    /**
+     * Calculates the local effects of the light at the given intersection point.
+     *
+     * @param gp  the intersection point
+     * @param ray the ray that intersects the geometry
+     * @return the color at the given intersection point considering local effects of the light
+     */
     private Color calcLocalEffects(GeoPoint gp, Ray ray) {
         Vector n = gp.geometry.getNormal(gp.point);
         Vector v = ray.getDirection().normalize();
@@ -65,27 +101,12 @@ public class SimpleRayTracer extends RayTracerBase {
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) {  // sign(nl) == sign(nv)
                 Color iL = lightSource.getIntensity(gp.point);
-                Color diffusive = calcDiffusive(material, nl, iL);
-                Color specular = calcSpecular(material, n, material.shininess, nl, v, l, iL);
-                color = color.add(diffusive).add(specular);
+                color = color.add(calcDiffusive(material, nl, iL)).add(
+                        calcSpecular(material, n, material.shininess, nl, v, l, iL));
             }
+//
         }
+
         return color;
     }
 }
-
-/**
- * Calculates the color at a given point in the scene.
- * This method currently returns the intensity of the ambient light in the scene.
- *
- * @param geoPoint the point of the specific geometry at which to calculate the color
- * @param ray
- * @return the color at the given point, which is the intensity of the ambient light
- */
-
-
-
-
-
-
-

@@ -7,12 +7,12 @@ import lighting.AmbientLight;
 import lighting.DirectionLight;
 import lighting.PointLight;
 import lighting.SpotLight;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 import scene.Scene;
 
-import static java.awt.Color.BLUE;
-import static java.awt.Color.WHITE;
+import static java.awt.Color.*;
 
 /**
  * Test rendering a basic image
@@ -227,18 +227,25 @@ public class LightsTests {
     /**
      * Produce a picture of a sphere lighted by a narrow spotlight
      */
+
     @Test
     public void sphereSpotSharp() throws CloneNotSupportedException {
         scene1.geometries.add(sphere);
-        scene1.lights
-                .add(new SpotLight(sphereLightColor, sphereLightPosition, new Vector(1, 1, -0.5))
-                        .setKL(0.001).setkQ(0.00004).setNarrowBeam(10));
+
+        SpotLight spotLight = (SpotLight) new SpotLight(sphereLightColor, sphereLightPosition, new Vector(1, 1, -0.5))
+                .setKL(0.001)
+                .setKQ(0.00004)
+                .setNarrowBeam(10);
+
+        scene1.lights.add(spotLight); // הוספת מקור האור לרשימת מקורות האור בסצנה
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpotSharp", 500, 500))
                 .build()
                 .renderImage()
                 .writeToImage();
     }
+
+
 
     /**
      * Produce a picture of two triangles lighted by a narrow spotlight
@@ -254,5 +261,115 @@ public class LightsTests {
                 .renderImage()
                 .writeToImage();
     }
+
+
+
+    /**
+     * Produce a picture of two triangles lighted by all light types
+     */
+
+    @Test
+    public void sphereAllLights() throws CloneNotSupportedException {
+        // הגדרת הסצנה והוספת הספירה
+        scene1.geometries.add(new Sphere(new Point(0, 0, -50), SPHERE_RADIUS)
+                .setEmission(new Color(BLUE).reduce(2))
+                .setMaterial(new Material().setKD(KD).setKS(KS).setShininess(SHININESS)));
+
+        // הוספת מקורות האור
+        scene1.lights.add(new SpotLight(new Color(255, 165, 0), new Point(-50, -50, 25), new Vector(1, 1, -0.5))
+                .setKL(0.001).setKQ(0.0001).setNarrowBeam(10));
+        scene1.lights.add(new PointLight(new Color(255, 69, 0), new Point(0, 0, 500))
+                .setKL(0.0001).setKQ(0.00001));
+        scene1.lights.add(new DirectionLight(new Color(255, 69, 0), new Vector(-1, -1, -0.5)));
+
+        camera1.setImageWriter(new ImageWriter("sphereAllLights", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+    /**
+     * Test method to produce an image of two triangles illuminated by multiple light sources.
+     *
+     * @throws CloneNotSupportedException if cloning the geometry is not supported
+     */
+    @Test
+    public void trianglesAllLights() throws CloneNotSupportedException {
+        // Create two red triangles with specified vertices, emission color, and material
+        Geometry redTriangle1 = new Triangle(vertices[0], vertices[1], vertices[2])
+                .setEmission(new Color(RED))
+                .setMaterial(material);
+        Geometry redTriangle2 = new Triangle(vertices[0], vertices[1], vertices[3])
+                .setEmission(new Color(RED))
+                .setMaterial(material);
+
+        // Add the triangles to the scene's geometries
+        scene2.geometries.add(redTriangle1, redTriangle2);
+
+        // Add a directional light with green color and specified direction
+        scene2.lights.add(new DirectionLight(new Color(GREEN), new Vector(1, -1, -1)));
+
+        // Add a point light with blue color, specified position, and attenuation factors
+        scene2.lights.add(new PointLight(new Color(BLUE), new Point(-20, 40, -80))
+                .setKL(0.001).setKQ(0.0002));
+
+        // Add a spot light with yellow color, specified position, direction, and narrow beam angle
+        scene2.lights.add(new SpotLight(new Color(YELLOW), new Point(20, 30, -90), new Vector(-1, -1, -1))
+                .setKL(0.001).setKQ(0.0001).setNarrowBeam(10));
+
+        // Set the image writer for the camera, build the camera, render the image, and write the image to file
+        camera2.setImageWriter(new ImageWriter("lightTrianglesAllLights", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+
+
+//    @Test
+//    public void sphereSpotSharpBonus() throws CloneNotSupportedException {
+//        // הגדרת הסצנה והוספת הספירה
+//        scene1.geometries.add(new Sphere(new Point(0, 0, -50), SPHERE_RADIUS)
+//                .setEmission(new Color(BLUE).reduce(2))
+//                .setMaterial(new Material().setKD(KD).setKS(KS).setShininess(SHININESS)));
+//
+//        // הוספת מקור האור
+//        SpotLight spotLight = (SpotLight) new SpotLight(new Color(255, 165, 0), new Point(-50, -50, 25), new Vector(1, 1, -0.5))
+//                .setKL(0.001)
+//                .setKQ(0.00004)
+//                .setNarrowBeam(10);
+//
+//        scene1.lights.add(spotLight); // הוספת מקור האור לרשימת מקורות האור בסצנה
+//
+//        camera1.setImageWriter(new ImageWriter("sphereSpotSharpBonus", 500, 500))
+//                .build()
+//                .renderImage()
+//                .writeToImage();
+//    }
+//    @Test
+//    public void trianglesSpotSharpBonus() throws CloneNotSupportedException {
+//        // הגדרת הסצנה והוספת המשולשים
+//        Geometry redTriangle1 = new Triangle(vertices[0], vertices[1], vertices[2])
+//                .setEmission(new Color(RED))
+//                .setMaterial(material);
+//        Geometry redTriangle2 = new Triangle(vertices[0], vertices[1], vertices[3])
+//                .setEmission(new Color(RED))
+//                .setMaterial(material);
+//
+//        scene2.geometries.add(redTriangle1, redTriangle2);
+//
+//        // הוספת מקור האור
+//        scene2.lights.add(new SpotLight(new Color(GREEN), trianglesLightPosition, trianglesLightDirection)
+//                .setKL(0.001)
+//                .setKQ(0.00004)
+//                .setNarrowBeam(10));
+//
+//        camera2.setImageWriter(new ImageWriter("trianglesSpotSharpBonus", 500, 500))
+//                .build()
+//                .renderImage()
+//                .writeToImage();
+//    }
+//
+
 
 }

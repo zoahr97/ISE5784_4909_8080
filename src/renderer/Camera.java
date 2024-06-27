@@ -98,7 +98,7 @@ public class Camera implements Cloneable {
         return new Builder();
     }
 
-    private Camera() {
+    Camera() {
     }
 
     @Override
