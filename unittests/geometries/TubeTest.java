@@ -5,7 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for the Tube class.
@@ -19,7 +20,7 @@ class TubeTest {
      */
     @Test
     void testGetNormal() {
-        Tube tube = new Tube(1,new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)));
+        Tube tube = new Tube(1, new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)));
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: if The calculation of normal is correctly
@@ -29,7 +30,7 @@ class TubeTest {
                 "ERROR: The calculation of normal to the tube is not calculated correctly");
 
         // TC02: if The vector is normal
-        assertEquals(1,tube.getNormal(new Point(2,1,0)).length() ,0.000001,
+        assertEquals(1, tube.getNormal(new Point(2, 1, 0)).length(), 0.000001,
                 "Error the vector was not normal");
 
 

@@ -4,14 +4,27 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import static primitives.Util.alignZero;
+
 
 /**
  * The SpotLight class represents a spotlight in a scene.
  * It extends the PointLight class.
  */
 public class SpotLight extends PointLight {
-private Vector direction;
+    private Vector direction;
+    private double narrowBeam = 1;
 
+    /**
+     * Constructs a new SpotLight with the specified intensity and position.
+     *
+     * @param intensity the color intensity of the light
+     * @param position  the position of the light source
+     */
+    public SpotLight(Color intensity, Point position, Vector direction) {
+        super(intensity, position);
+        this.direction = direction.normalize();
+    }
 
     /**
      * Sets the narrow beam angle for the spotlight.
@@ -20,18 +33,8 @@ private Vector direction;
      * @return the current SpotLight instance with the updated narrow beam angle.
      */
     public SpotLight setNarrowBeam(double narrowBeam) {
-        super.setNarrowBeam(narrowBeam);
+        this.narrowBeam = narrowBeam;
         return this;
-    }
-    /**
-     * Constructs a new SpotLight with the specified intensity and position.
-     *
-     * @param intensity the color intensity of the light
-     * @param position the position of the light source
-     */
-    public SpotLight(Color intensity, Point position, Vector direction) {
-        super(intensity, position);
-        this.direction = direction.normalize();
     }
 
     /**
@@ -40,7 +43,7 @@ private Vector direction;
      * @param kC the constant attenuation factor
      * @return the updated SpotLight object
      */
-    public SpotLight setKc(double kC) {
+    public SpotLight setKC(double kC) {
         super.setKC(kC);
         return this;
     }
@@ -62,14 +65,15 @@ private Vector direction;
      * @param kQ the quadratic attenuation factor
      * @return the updated SpotLight object
      */
-    public SpotLight setkQ(double kQ) {
+    public SpotLight setKQ(double kQ) {
         super.setKQ(kQ);
         return this;
     }
 
+
     @Override
     public Color getIntensity(Point p) {
-        return super.getIntensity(p).scale(Math.max(0 ,direction.dotProduct(getL(p))));
+        return super.getIntensity(p).scale(Math.max(0, Math.pow(alignZero(direction.dotProduct(getL(p))), narrowBeam)));
     }
 
     @Override
@@ -77,7 +81,10 @@ private Vector direction;
         return super.getL(p);
     }
 
-    public LightSource setNarrowBeam(int i) {
-          return  null;
+    @Override
+    public double getDistance(Point point) {
+        return super.getDistance(point);
     }
 }
+
+

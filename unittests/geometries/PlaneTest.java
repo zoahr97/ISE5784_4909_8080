@@ -8,6 +8,7 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Unit tests for the Plane class.
  * Tests the findIntersections method to ensure it correctly finds intersection points
@@ -19,16 +20,16 @@ class PlaneTest {
     void testPlane() {
         // ====Boundary Values Tests ====
         // TC10: two points are the same
-        Point p1 = new Point( 1,  2, 3);
-        Point p2 = new Point( 1,  2,  3);
-        Point p3= new Point( 2,  3,  4);
-        assertThrows (IllegalArgumentException.class, ()->new Plane (p1, p2, p3),
+        Point p1 = new Point(1, 2, 3);
+        Point p2 = new Point(1, 2, 3);
+        Point p3 = new Point(2, 3, 4);
+        assertThrows(IllegalArgumentException.class, () -> new Plane(p1, p2, p3),
                 "ERROR: two points are the same");
         //TC11: three points are on the same line
-        Point p4 = new Point(1,  1,  1);
-        Point p5 = new Point( 1,  1,  2);
-        Point p6 = new Point( 1,  1,  3);
-        assertThrows (IllegalArgumentException.class, () -> new Plane (p4, p5, p6),
+        Point p4 = new Point(1, 1, 1);
+        Point p5 = new Point(1, 1, 2);
+        Point p6 = new Point(1, 1, 3);
+        assertThrows(IllegalArgumentException.class, () -> new Plane(p4, p5, p6),
                 "ERROR: three points are on the same line");
     }
 
@@ -42,19 +43,19 @@ class PlaneTest {
         // TC01: Three non-collinear points
         Point p1 = new Point(1, 2, 3);
         Point p2 = new Point(2, 3, 4);
-        Point p3= new Point( 3,  4, 6);
-        Plane plane = new Plane (p1, p2, p3);
-        Vector vec = (new Vector ( 1, -1, 0)).normalize();
-        assertTrue((plane.getNormal().equals (vec) || plane.getNormal().equals (vec.scale(  -1.0))),
+        Point p3 = new Point(3, 4, 6);
+        Plane plane = new Plane(p1, p2, p3);
+        Vector vec = (new Vector(1, -1, 0)).normalize();
+        assertTrue((plane.getNormal().equals(vec) || plane.getNormal().equals(vec.scale(-1.0))),
                 "ERROR: getNormal() wrong value");
         //TC02 if the vector is normal
-        assertEquals( 1, plane.getNormal().length(),  0.000001,
+        assertEquals(1, plane.getNormal().length(), 0.000001,
                 "ERROR: the vector was not normal");
     }
 
     @Test
     void testFindIntersections() {
-        Plane p1 = new Plane(new Point(-1, 0, 0), new Point(0,-1,0),new Point(0,0,1));
+        Plane p1 = new Plane(new Point(-1, 0, 0), new Point(0, -1, 0), new Point(0, 0, 1));
 
         // ============ Equivalence Partitions Tests ==============
         //TC01: Ray intersects the plane

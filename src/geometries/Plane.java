@@ -85,7 +85,6 @@ public class Plane extends Geometry {
     }
 
 
-
     /**
      * Finds the intersection points between a ray and the plane.
      * Since a plane is infinite, it may intersect the ray at one point or infinitely many points.
@@ -114,7 +113,7 @@ public class Plane extends Geometry {
             return null;
         }
         //if the ray intersects the plane
-        return List.of(new GeoPoint(this,ray.getPoint(t1)));
+        return List.of(new GeoPoint(this, ray.getPoint(t1)));
     }
 
 

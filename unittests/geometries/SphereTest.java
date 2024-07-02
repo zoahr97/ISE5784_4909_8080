@@ -8,7 +8,8 @@ import primitives.Vector;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Unit tests for the Sphere class.
@@ -19,6 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 class SphereTest {
+    private final Point p001 = new Point(0, 0, 1);
+    private final Point p100 = new Point(1, 0, 0);
+    private final Vector v001 = new Vector(0, 0, 1);
+
     /**
      * Test method for {@link geometries.Sphere#getNormal(Point)}.
      */
@@ -40,10 +45,6 @@ class SphereTest {
                 "Error the vector was not normalized");
 
     }
-
-    private final Point p001 = new Point(0, 0, 1);
-    private final Point p100 = new Point(1, 0, 0);
-    private final Vector v001 = new Vector(0, 0, 1);
 
     /**
      * Test method for {@link geometries.Sphere#findIntersections(primitives.Ray)}.

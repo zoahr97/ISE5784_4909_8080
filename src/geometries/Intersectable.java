@@ -3,7 +3,6 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,14 +26,14 @@ public abstract class Intersectable {
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
 
- public  final List<GeoPoint> findGeoIntersections(Ray ray) {
+    public final List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersectionsHelper(ray);
     }
 
-protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
 
-/**
+    /**
      * GeoPoint represents a point on a geometric shape, including the specific geometry
      * and the coordinates of the point.
      */

@@ -2,6 +2,7 @@ package lighting;
 
 import primitives.Color;
 import primitives.Double3;
+import primitives.Point;
 
 /**
  * The AmbientLight class represents ambient lighting in a scene.
@@ -21,7 +22,7 @@ public class AmbientLight extends Light {
      * @param ka the scaling factor (as Double3) for the intensity
      */
     public AmbientLight(Color Ia, Double3 ka) {
-        super( Ia.scale(ka));
+        super(Ia.scale(ka));
     }
 
     /**
@@ -35,5 +36,8 @@ public class AmbientLight extends Light {
     }
 
 
-
+    @Override
+    public Color getIntensity(Point p) {
+        return null;
+    }
 }

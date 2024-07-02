@@ -3,11 +3,7 @@ package renderer;
 import geometries.Geometry;
 import geometries.Sphere;
 import geometries.Triangle;
-import lighting.AmbientLight;
-import lighting.DirectionLight;
-import lighting.PointLight;
-import lighting.SpotLight;
-import org.junit.jupiter.api.Nested;
+import lighting.*;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 import scene.Scene;
@@ -237,14 +233,13 @@ public class LightsTests {
                 .setKQ(0.00004)
                 .setNarrowBeam(10);
 
-        scene1.lights.add(spotLight); // הוספת מקור האור לרשימת מקורות האור בסצנה
+        scene1.lights.add((LightSource) spotLight); // הוספת מקור האור לרשימת מקורות האור בסצנה
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpotSharp", 500, 500))
                 .build()
                 .renderImage()
                 .writeToImage();
     }
-
 
 
     /**
@@ -261,7 +256,6 @@ public class LightsTests {
                 .renderImage()
                 .writeToImage();
     }
-
 
 
     /**
@@ -323,53 +317,4 @@ public class LightsTests {
                 .renderImage()
                 .writeToImage();
     }
-
-
-
-//    @Test
-//    public void sphereSpotSharpBonus() throws CloneNotSupportedException {
-//        // הגדרת הסצנה והוספת הספירה
-//        scene1.geometries.add(new Sphere(new Point(0, 0, -50), SPHERE_RADIUS)
-//                .setEmission(new Color(BLUE).reduce(2))
-//                .setMaterial(new Material().setKD(KD).setKS(KS).setShininess(SHININESS)));
-//
-//        // הוספת מקור האור
-//        SpotLight spotLight = (SpotLight) new SpotLight(new Color(255, 165, 0), new Point(-50, -50, 25), new Vector(1, 1, -0.5))
-//                .setKL(0.001)
-//                .setKQ(0.00004)
-//                .setNarrowBeam(10);
-//
-//        scene1.lights.add(spotLight); // הוספת מקור האור לרשימת מקורות האור בסצנה
-//
-//        camera1.setImageWriter(new ImageWriter("sphereSpotSharpBonus", 500, 500))
-//                .build()
-//                .renderImage()
-//                .writeToImage();
-//    }
-//    @Test
-//    public void trianglesSpotSharpBonus() throws CloneNotSupportedException {
-//        // הגדרת הסצנה והוספת המשולשים
-//        Geometry redTriangle1 = new Triangle(vertices[0], vertices[1], vertices[2])
-//                .setEmission(new Color(RED))
-//                .setMaterial(material);
-//        Geometry redTriangle2 = new Triangle(vertices[0], vertices[1], vertices[3])
-//                .setEmission(new Color(RED))
-//                .setMaterial(material);
-//
-//        scene2.geometries.add(redTriangle1, redTriangle2);
-//
-//        // הוספת מקור האור
-//        scene2.lights.add(new SpotLight(new Color(GREEN), trianglesLightPosition, trianglesLightDirection)
-//                .setKL(0.001)
-//                .setKQ(0.00004)
-//                .setNarrowBeam(10));
-//
-//        camera2.setImageWriter(new ImageWriter("trianglesSpotSharpBonus", 500, 500))
-//                .build()
-//                .renderImage()
-//                .writeToImage();
-//    }
-//
-
-
 }

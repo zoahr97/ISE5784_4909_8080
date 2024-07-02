@@ -8,14 +8,14 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Unit tests for the Triangle class.
  * Tests the getNormal method to ensure it correctly computes the normal vector
  * and the findIntersections method to ensure it correctly identifies intersection points
  * with a given ray.
  */
-class TriangleTest
-{
+class TriangleTest {
     /**
      * Test method for {@link geometries.Triangle#getNormal(Point)}.
      */
@@ -30,7 +30,7 @@ class TriangleTest
         Triangle triangle = new Triangle(p1, p2, p3);
         Vector vec = new Vector(0.5, 0.5, 0.5).normalize();
         assertTrue(
-                (triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec)) ,
+                (triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec)),
                 "ERROR: getNormal() wrong value");
         //TC02 if the vector is normalized
         assertEquals(
@@ -39,14 +39,15 @@ class TriangleTest
                 "ERROR: the vector was not normalized");
 
     }
+
     @Test
     void testFindIntersections() {
-        Triangle triangle = new Triangle(new Point(3,0,0), new Point(0,3,0), new Point(0, 0, 4));
+        Triangle triangle = new Triangle(new Point(3, 0, 0), new Point(0, 3, 0), new Point(0, 0, 4));
 
         // ============ Equivalence Partitions Tests ==============
 
         // TC01:   Ray intersect inside Triangle
-        Point p = new Point(1.1195516811955168,0.9464508094645081,1.2453300124533);
+        Point p = new Point(1.1195516811955168, 0.9464508094645081, 1.2453300124533);
         List<Point> result = triangle.findIntersections(new Ray(new Point(1, 0, 0),
                 new Vector(0.12, 0.95, 1.25)));
         assertEquals(List.of(p), result, "wrong point values");
@@ -61,13 +62,13 @@ class TriangleTest
 
         // =============== Boundary Values Tests ==================
         //TC011: Ray intersect on edge
-        assertNull(triangle.findIntersections(new Ray(new Point(0,-1,0), new Vector(1.8, 1, 1.6))),
+        assertNull(triangle.findIntersections(new Ray(new Point(0, -1, 0), new Vector(1.8, 1, 1.6))),
                 "Ray does not cross the triangle");
         //TC06:  Ray intersect in vertex
-        assertNull(triangle.findIntersections(new Ray(new Point(0,-1,0), new Vector(0, 1, 4))),
+        assertNull(triangle.findIntersections(new Ray(new Point(0, -1, 0), new Vector(0, 1, 4))),
                 "Ray does not cross the triangle");
         //TC07: Ray intersect on edge's continuation
-        assertNull(triangle.findIntersections(new Ray(new Point(-1,0,0), new Vector(0.24, 0.01, 4.99))),
+        assertNull(triangle.findIntersections(new Ray(new Point(-1, 0, 0), new Vector(0.24, 0.01, 4.99))),
                 "Ray does not cross the triangle");
     }
 

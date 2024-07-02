@@ -9,16 +9,22 @@ import primitives.Vector;
  * It extends the Light class and implements the LightSource interface.
  */
 public class PointLight extends Light implements LightSource {
-    private double narrowBeam = 1;
     protected Point position;
-    private double kC = 1;
-    private double kL = 0;
-    private double kQ = 0;
+    protected double kC = 1;
+    protected double kL = 0;
+    protected double kQ = 0;
 
-    public PointLight setNarrowBeam(double narrowBeam) {
-        this.narrowBeam = narrowBeam;
-        return this;
+    /**
+     * Constructs a new PointLight with the specified intensity and position.
+     *
+     * @param intensity the color intensity of the light
+     * @param position  the position of the light source
+     */
+    public PointLight(Color intensity, Point position) {
+        super(intensity);
+        this.position = position;
     }
+
     /**
      * Sets the constant attenuation factor (kC) for the point light.
      *
@@ -53,27 +59,30 @@ public class PointLight extends Light implements LightSource {
     }
 
     /**
-     * Constructs a new PointLight with the specified intensity and position.
+     * Calculates the intensity of the light at a given point.
      *
-     * @param intensity the color intensity of the light
-     * @param position the position of the light source
+     * @param p the point at which the intensity is calculated
+     * @return the color intensity of the light at the given point
      */
-    public PointLight(Color intensity, Point position) {
-        super(intensity);
-        this.position = position;
-    }
-
 
     @Override
     public Color getIntensity(Point p) {
-        return  intensity.scale( 1/(( (kC + kL* position.distance(p))+kQ* position.distanceSquared(p))));
+        return intensity.scale(1 / (((kC + kL * position.distance(p)) + kQ * position.distanceSquared(p))));
     }
 
-
+    /**
+     * Returns the direction of the light from the light source to a given point.
+     *
+     * @param p the point to which the light direction is calculated
+     * @return the direction vector of the light to the given point
+     */
     @Override
     public Vector getL(Point p) {
         return p.subtract(position).normalize();
     }
 
-
+    @Override
+    public double getDistance(Point point) {
+        return position.distance(point);
+    }
 }

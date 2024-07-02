@@ -26,6 +26,18 @@ public class Camera implements Cloneable {
     private RayTracerBase rayTracer;
 
 
+    private Camera() {
+    }
+
+    /**
+     * Gets a builder for creating a camera.
+     *
+     * @return A new instance of the builder.
+     */
+    public static Builder getBuilder() {
+        return new Builder();
+    }
+
     /**
      * Gets the position of the camera.
      *
@@ -89,18 +101,6 @@ public class Camera implements Cloneable {
         return width;
     }
 
-    /**
-     * Gets a builder for creating a camera.
-     *
-     * @return A new instance of the builder.
-     */
-    public static Builder getBuilder() {
-        return new Builder();
-    }
-
-    Camera() {
-    }
-
     @Override
     public Camera clone() {
         try {
@@ -152,7 +152,7 @@ public class Camera implements Cloneable {
     }
 
     /**
-     *Renders the image by casting rays through each pixel and coloring them.
+     * Renders the image by casting rays through each pixel and coloring them.
      */
     public Camera renderImage() {
         //throw new UnsupportedOperationException();
@@ -172,27 +172,36 @@ public class Camera implements Cloneable {
      * Writes the image to the output file.
      * This method delegates the writing process to the ImageWriter instance.
      */
-    public void writeToImage(){
+    public void writeToImage() {
         this.imageWriter.writeToImage();
     }
-    private void castRay(int Nx, int Ny, int column, int row){
-        if (column < 0 || column >= Nx || row < 0 || row >= Ny) {
-            throw new IllegalArgumentException("Pixel coordinates out of bounds.");
-        }
-        Ray ray =constructRay(Nx, Ny, column, row);
-        Color color= rayTracer.traceRay(ray);//calculate the color of the body the ray hurt
-        imageWriter.writePixel(column, row, color);
 
+    /**
+     * Casts a ray from the camera through a specific pixel on the view plane,
+     * traces the ray to determine the color at the intersection point,
+     * and writes the color to the image.
+     *
+     * @param Nx      the number of pixels in the horizontal direction of the view plane
+     * @param Ny      the number of pixels in the vertical direction of the view plane
+     * @param column  the column index of the pixel on the view plane
+     * @param row     the row index of the pixel on the view plane
+     */
+    private void castRay(int Nx, int Ny, int column, int row) {
+        Ray ray = constructRay(Nx, Ny, column, row);
+        Color color = rayTracer.traceRay(ray); // Calculate the color of the body the ray intersects
+        imageWriter.writePixel(column, row, color);
     }
+
+
     /**
      * Prints a grid on the image with the specified color and interval.
      * The grid lines will be drawn every 'interval' pixels both horizontally and vertically.
      *
      * @param interval the interval between the grid lines in pixels.
-     * @param color the color of the grid lines.
+     * @param color    the color of the grid lines.
      */
-    public Camera printGrid(int interval, Color color){
-        for (int i = 0; i <imageWriter.getNy(); i++) {
+    public Camera printGrid(int interval, Color color) {
+        for (int i = 0; i < imageWriter.getNy(); i++) {
             for (int j = 0; j < imageWriter.getNx(); j++) {
                 // Check if the current pixel is on a grid line
                 if (i % interval == 0 || j % interval == 0) {
@@ -210,6 +219,14 @@ public class Camera implements Cloneable {
      */
     public static class Builder {
         private Camera camera;
+
+        /**
+         * Default constructor for the builder.
+         */
+        public Builder() {
+            camera = new Camera();
+        }
+
         /**
          * Sets the width and height of the viewport.
          *
@@ -226,6 +243,7 @@ public class Camera implements Cloneable {
             this.camera.height = height;
             return this;
         }
+
         /**
          * Sets the ImageWriter for the Camera.
          *
@@ -248,7 +266,6 @@ public class Camera implements Cloneable {
             return this;
         }
 
-
         /**
          * Sets the distance from the camera to the viewport.
          *
@@ -263,6 +280,7 @@ public class Camera implements Cloneable {
             this.camera.distance = distance;
             return this;
         }
+
         /**
          * Sets the location of the camera.
          *
@@ -292,12 +310,6 @@ public class Camera implements Cloneable {
         }
 
         /**
-         * Default constructor for the builder.
-         */
-        public Builder() {
-            camera = new Camera();
-        }
-        /**
          * Constructs the camera object.
          *
          * @return A cloned instance of the camera.
@@ -312,12 +324,12 @@ public class Camera implements Cloneable {
                 throw new MissingResourceException(miss, cs, "width");
             if (isZero(camera.distance))
                 throw new MissingResourceException(miss, cs, "distance");
-            if(camera.imageWriter == null)
+            if (camera.imageWriter == null)
                 throw new MissingResourceException(miss, cs, "imageWriter");
-            if(camera.rayTracer == null)
+            if (camera.rayTracer == null)
                 throw new MissingResourceException(miss, cs, "rayTracer");
             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
-            camera.centerPoint=camera.p0.add(camera.vTo.scale(camera.distance));
+            camera.centerPoint = camera.p0.add(camera.vTo.scale(camera.distance));
             // Cloning and returning the camera
             return (Camera) camera.clone();
         }

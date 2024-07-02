@@ -1,9 +1,7 @@
 package renderer;
 
-import java.io.File;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import geometries.Sphere;
+import geometries.Triangle;
 import lighting.AmbientLight;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,8 +11,10 @@ import primitives.Color;
 import primitives.Double3;
 import primitives.Point;
 import scene.Scene;
-import geometries.Sphere;
-import geometries.Triangle;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 
 public class XMLSceneReader {
 
@@ -72,7 +72,7 @@ public class XMLSceneReader {
      * Parses a sphere element and adds it to the scene.
      *
      * @param element the sphere element
-     * @param scene the scene to add the sphere to
+     * @param scene   the scene to add the sphere to
      */
     private static void parseAndAddSphere(Element element, Scene scene) {
         double radius = Double.parseDouble(element.getAttribute("radius"));
@@ -88,7 +88,7 @@ public class XMLSceneReader {
      * Parses a triangle element and adds it to the scene.
      *
      * @param element the triangle element
-     * @param scene the scene to add the triangle to
+     * @param scene   the scene to add the triangle to
      */
     private static void parseAndAddTriangle(Element element, Scene scene) {
         String[] p0Coords = element.getAttribute("p0").split(" ");

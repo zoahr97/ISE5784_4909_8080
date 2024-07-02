@@ -5,7 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Unit tests for the Cylinder class.
  * Tests the getNormal method to ensure it correctly computes the normal vector

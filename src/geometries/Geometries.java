@@ -2,7 +2,9 @@ package geometries;
 
 import primitives.Ray;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The Geometries class represents a collection of geometric objects.
@@ -16,7 +18,8 @@ public class Geometries extends Intersectable {
     /**
      * Default constructor, initializes an empty list of geometries.
      */
-    public Geometries() {}
+    public Geometries() {
+    }
 
     /**
      * Constructor that initializes the list of geometries with the provided elements.

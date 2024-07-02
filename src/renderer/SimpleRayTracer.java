@@ -3,11 +3,10 @@ package renderer;
 import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 import lighting.LightSource;
-import primitives.Color;
-import primitives.Material;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 import scene.Scene;
+
+import java.util.List;
 
 import static primitives.Util.alignZero;
 
@@ -16,6 +15,39 @@ import static primitives.Util.alignZero;
  * ray tracing functionality for rendering a scene.
  */
 public class SimpleRayTracer extends RayTracerBase {
+    /**
+     * A small constant used to offset rays to avoid numerical issues such as self-intersection.
+     * This value is crucial in ray tracing algorithms to prevent a ray from incorrectly
+     * intersecting the surface it originates from due to floating-point precision errors.
+     */
+    private static final double EPS = 0.1;
+
+    /**
+     * Determines if a given point is unshaded by any objects in the scene.
+     *
+     * @param gp  The geometric point being checked.
+     * @param l   The vector from the light source to the point.
+     * @param n   The normal vector at the point (not used in this method but may be relevant in other contexts).
+     * @return    True if the point is unshaded, false if it is shaded.
+     */
+    private boolean unshaded(GeoPoint gp,LightSource light,Vector l , Vector n,double nl) {
+
+        // Calculate the direction from the point to the light source
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Vector epsVector = n.scale(nl < 0 ? EPS : -EPS);
+        Point point = gp.point.add(epsVector);
+        // Create a ray from the geometric point in the direction of the light source
+        Ray ray = new Ray(point, lightDirection);
+        // Find intersections of the ray with objects in the scene
+        List<Point> intersections = scene.geometries.findIntersections(ray);
+        // If there are no intersections, the point is unshaded
+        if(intersections==null)return true;
+        for(Point intersection : intersections) {
+            if(light.getDistance(intersection)>intersection.distance(ray.getHead()))return false;
+        }
+        return true;
+    }
+
     /**
      * Constructs a SimpleRayTracer with the given scene.
      *
@@ -99,7 +131,8 @@ public class SimpleRayTracer extends RayTracerBase {
         for (LightSource lightSource : scene.lights) {
             Vector l = lightSource.getL(gp.point).normalize();
             double nl = alignZero(n.dotProduct(l));
-            if (nl * nv > 0) {  // sign(nl) == sign(nv)
+            if ((nl * nv > 0)&&unshaded(gp,lightSource,l,n,nl)) {  // sign(nl) == sign(nv)
+
                 Color iL = lightSource.getIntensity(gp.point);
                 color = color.add(calcDiffusive(material, nl, iL)).add(
                         calcSpecular(material, n, material.shininess, nl, v, l, iL));

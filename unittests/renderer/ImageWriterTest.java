@@ -3,9 +3,11 @@ package renderer;
 import org.junit.jupiter.api.Test;
 import primitives.Color;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.awt.Color.*;
+
 /**
  * This class is responsible for writing an image with a grid pattern.
+ *
  * @author Dvora and Zohar
  */
 class ImageWriterTest {
@@ -17,15 +19,15 @@ class ImageWriterTest {
         // Fill the entire image with yellow color
         for (int i = 0; i < image.getNx(); i++) {
             for (int j = 0; j < image.getNy(); j++) {
-                image.writePixel(i, j, new Color(java.awt.Color.yellow));
+                image.writePixel(i, j, new Color(YELLOW));
             }
         }
 
-        for (int i = 0; i <image.getNy(); i++) {
+        for (int i = 0; i < image.getNy(); i++) {
             for (int j = 0; j < image.getNx(); j++) {
                 // Check if the current pixel is on a grid line
                 if (i % 50 == 0 || j % 50 == 0) {
-                    image.writePixel(j, i, new Color(java.awt.Color.red)); // Color the pixel on the grid line
+                    image.writePixel(j, i, new Color(RED)); // Color the pixel on the grid line
                 }
             }
         }

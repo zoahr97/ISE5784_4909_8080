@@ -1,11 +1,5 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Ray;
-
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * An abstract class representing a radial geometry shape. Radial geometry shapes have a single radius value that
  * determines their size.
@@ -19,7 +13,6 @@ public abstract class RadialGeometry extends Geometry {
     public RadialGeometry(double radius) {
         this.radius = radius;
     }
-
 
 
 }

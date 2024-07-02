@@ -17,7 +17,16 @@ public class Scene {
     public AmbientLight ambientLight = AmbientLight.NONE; // The ambient light of the scene, default is none
     public Geometries geometries = new Geometries(); // The geometries in the scene
     // Initializing a new list for light sources
-     public List<LightSource> lights = new LinkedList<LightSource>();
+    public List<LightSource> lights = new LinkedList<>();
+
+    /**
+     * Constructs a Scene with a given name.
+     *
+     * @param name the name of the scene
+     */
+    public Scene(String name) {
+        this.name = name;
+    }
 
     /**
      * Sets the list of light sources for the scene.
@@ -28,15 +37,6 @@ public class Scene {
     public Scene setLights(List<LightSource> lights) {
         this.lights = lights;
         return this;
-    }
-
-    /**
-     * Constructs a Scene with a given name.
-     *
-     * @param name the name of the scene
-     */
-    public Scene(String name) {
-        this.name = name;
     }
 
     /**

@@ -11,8 +11,8 @@ import primitives.Vector;
  * @author Dvora Enav and Zohar Tamsut
  */
 public abstract class Geometry extends Intersectable {
-    protected Color emission=new Color(java.awt.Color.BLACK);
-    private Material material=new Material();
+    protected Color emission = new Color(java.awt.Color.BLACK);
+    private Material material = new Material();
 
     /**
      * Gets the material of the object.

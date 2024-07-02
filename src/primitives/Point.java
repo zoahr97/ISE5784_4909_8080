@@ -11,14 +11,13 @@ package primitives;
 public class Point {
 
     /**
-     * The coordinates of the point stored as a Double3 object.
-     */
-    final protected Double3 xyz;
-
-    /**
      * Represents the origin point (0, 0, 0).
      */
     public static final Point ZERO = new Point(Double3.ZERO);
+    /**
+     * The coordinates of the point stored as a Double3 object.
+     */
+    final protected Double3 xyz;
 
     /**
      * Constructs a point from three double values representing its coordinates.
@@ -40,7 +39,6 @@ public class Point {
         this.xyz = xyz;
     }
 
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -120,8 +118,8 @@ public class Point {
      * @return A vector representing the displacement from the given point to this point.
      */
     public Vector subtract(Point point) {
-       // if(xyz==point.xyz)
-            //throw new IllegalArgumentException("Zero vector not allowed");
+        // if(xyz==point.xyz)
+        //throw new IllegalArgumentException("Zero vector not allowed");
         return new Vector(xyz.subtract(point.xyz));
 
     }

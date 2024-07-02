@@ -4,11 +4,9 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
 /**
  * Represents a triangle in 3D space defined by three {@link Point}s.

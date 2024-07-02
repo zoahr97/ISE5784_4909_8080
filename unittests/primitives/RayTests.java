@@ -1,9 +1,6 @@
 package primitives;
 
 import org.junit.jupiter.api.Test;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
 
 import java.util.LinkedList;
 import java.util.List;
