@@ -27,10 +27,24 @@ public class Ray {
      *
      * @param p1 is point to start from her
      * @param v1 is the direction of the point
+
      */
     public Ray(Point p1, Vector v1) {
         head = p1;
         direction = v1.normalize();
+    }
+    /**
+     * Constructs a new Ray with an offset to avoid self-intersection.
+     *
+     * @param p1     The starting point of the ray.
+     * @param v1     The direction of the ray.
+     * @param normal The normal at the point of intersection.
+
+     */
+    public Ray(Point p1, Vector v1, Vector normal) {
+        direction = v1.normalize();
+        double offset = normal.dotProduct(v1) > 0 ? DELTA : -DELTA;
+        head = p1.add(normal.scale(offset));
     }
 
     /**
@@ -80,9 +94,6 @@ public class Ray {
     }
 
 
-    public Ray get(int i) {
-        return new Ray(head.add(direction.scale(i)), direction.scale(i));
-    }
 
     /**
      * //   Finds the closest point to the ray's head from a list of points.
