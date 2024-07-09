@@ -10,7 +10,9 @@ import scene.Scene;
 
 import java.util.List;
 
+import static java.awt.AWTEventMulticaster.add;
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * SimpleRayTracer is a class that extends RayTracerBase and provides basic
@@ -85,13 +87,59 @@ public class SimpleRayTracer extends RayTracerBase {
     @Override
     public Color traceRay(Ray ray) {
         GeoPoint closestPoint = findClosestIntersection(ray);
-        return calcColor(closestPoint, ray);
+        return closestPoint==null?scene.background:
+                calcColor(closestPoint, ray);
 //        var intersections = scene.geometries.findGeoIntersections(ray);
 //        if (intersections == null)
 //            return scene.background;
 //        Intersectable.GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
 //        return calcColor(closestPoint, ray);
     }
+
+    /**
+     * Calculates the global effect (reflection/refraction) of a ray.
+     *
+     * @param ray   the ray to trace
+     * @param level the recursion level for reflection/refraction
+     * @param k     the attenuation factor
+     * @param kx    the specific attenuation for the current effect (reflection/refraction)
+     * @return the color resulting from the global effect
+     */
+    private Color calcGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
+        Double3 kkx = k.product(kx);
+        if (kkx.lowerThan(MIN_CALC_COLOR_K)) return Color.BLACK;
+
+        GeoPoint gp = findClosestIntersection(ray);
+        if (gp == null) return scene.background.scale(kx);
+
+        return isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDirection()))
+                ? Color.BLACK : calcColor(gp, ray, level - 1, kkx).scale(kx);
+
+    }
+
+    /**
+     * Calculates the combined global effects (reflection and refraction) at a given intersection point.
+     *
+     * @param gp    the intersection point
+     * @param ray   the ray that intersects the point
+     * @param level the recursion level for reflection/refraction
+     * @param k     the attenuation factor
+     * @return the combined color resulting from reflection and refraction
+     */
+    private Color calcGlobalEffects(GeoPoint gp, Ray ray,
+                                    int level, Double3 k) {
+
+        Color color = Color.BLACK;
+        Vector v = ray.getDirection();
+        Vector n = gp.geometry.getNormal(gp.point);
+        Material material = gp.geometry.getMaterial();
+        return calcGlobalEffect(constructReflectedRay(gp, v, n),
+                level, k, material.kR).
+                add(calcGlobalEffect(constructRefractedRay(gp, v, n),
+                level, k, material.kT));
+    }
+
+
     /**
      * Calculates the color at a given intersection point `gp` on a surface for a ray `ray`.
      * Includes both local and global lighting effects recursively up to `level` depth.
@@ -119,84 +167,35 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
-     * Calculates the global effects (refraction and reflection) for a given intersection point.
-     * Uses the material properties of the intersected geometry to calculate the effects.
+     * Constructs a reflected ray based on the incoming ray, the normal at the intersection point, and the geometry.
      *
-     * @param gp    The intersection point (GeoPoint).
-     * @param ray   The incident ray.
-     * @param level The current recursion level (for recursive ray tracing).
-     * @param k     The attenuation factors for the global effects.
-     * @return The color resulting from global effects (refraction and reflection).
+     * @param gp the intersection point
+     * @param v the direction vector of the incoming ray
+     * @param n the normal vector at the intersection point
+     * @return the reflected ray
      */
-    private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
-        if (gp == null || gp.geometry == null) {
-            return Color.BLACK; // Return black color or handle the error as needed
-        }
-        Material material = gp.geometry.getMaterial();
-
-        // Calculate refraction effect
-        Ray refractedRay = constructRefractedRay(gp, ray);
-        Color refractionColor = calcGlobalEffect(refractedRay, material.kT, level, k);
-
-        // Calculate reflection effect
-        Ray reflectedRay = constructReflectedRay(gp, ray);
-        Color reflectionColor = calcGlobalEffect(reflectedRay, material.kR, level, k);
-
-        // Combine refraction and reflection colors
-        return refractionColor.add(reflectionColor);
-    }
-
-
-    /**
-     * Constructs a refracted ray based on the given intersection point and incident ray.
-     *
-     * @param gp  The intersection point information.
-     * @param ray The incident ray.
-     * @return The refracted ray, or null if refraction is not possible.
-     */
-    private Ray constructRefractedRay(GeoPoint gp, Ray ray) {
-        Vector v = ray.getDirection();
-        Vector n = gp.geometry.getNormal(gp.point);
-        return new Ray(gp.point, v, n);
-    }
-
-    /**
-     * Constructs a reflected ray based on the given intersection point and incident ray.
-     *
-     * @param gp  The intersection point information.
-     * @param ray The incident ray.
-     * @return The reflected ray.
-     */
-    private Ray constructReflectedRay(GeoPoint gp, Ray ray) {
-        Vector v = ray.getDirection();
-        Vector n = gp.geometry.getNormal(gp.point);
+    private Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n) {
+        // r = v - 2 * (v . n) * n
         double vn = v.dotProduct(n);
+        if (isZero(vn)) {
+            return null; // If the dot product is zero, the reflection doesn't happen
+        }
         Vector r = v.subtract(n.scale(2 * vn));
         return new Ray(gp.point, r, n);
     }
 
-
-
-    private Color calcGlobalEffect(Ray ray, Double3 kx, int level, Double3 k) {
-        Double3 kkx = kx.product(k);
-        if (kkx.lowerThan(MIN_CALC_COLOR_K)) return Color. BLACK;
-        GeoPoint gp = findClosestIntersection(ray);
-        return (gp == null ? scene.background : calcColor(gp, ray, level - 1, kkx))
-                .scale(kx);
+    /**
+     * Constructs a refracted ray based on the incoming ray, the normal at the intersection point, and the geometry.
+     *
+     * @param gp the intersection point
+     * @param v the direction vector of the incoming ray
+     * @param n the normal vector at the intersection point
+     * @return the refracted ray
+     */
+    private Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
+        return new Ray(gp.point, v, n); // Refracted ray simply continues in the same direction
     }
 
-    /**
-     * Finds the closest intersection point between the given ray and any object in the scene.
-     * Returns the intersection point as a GeoPoint object.
-     * @param ray The ray for which to find the closest intersection.
-     * @return The closest intersection point with any object in the scene, or null if no intersection found.
-     */
-    /**
-     * Finds the closest intersection point between the given ray and any object in the geometries collection.
-     * Returns the intersection point as a GeoPoint object.
-     * @param ray The ray for which to find the closest intersection.
-     * @return The closest intersection point with any object in the geometries collection, or null if no intersection found.
-     */
     /**
      * Finds the closest intersection point between the given ray and any object in the geometries collection.
      * Returns the intersection point as a GeoPoint object.
@@ -204,28 +203,8 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return The closest intersection point with any object in the geometries collection, or null if no intersection found.
      */
     private GeoPoint findClosestIntersection(Ray ray) {
-        List<GeoPoint> geoList = scene.geometries.findGeoIntersections(ray);
-        if (geoList == null || geoList.isEmpty()) {
-            return null;
-        }
-
-        // Initialize variables to track the closest intersection
-        GeoPoint closestPoint = null;
-        double closestDistance = Double.POSITIVE_INFINITY;
-
-        // Iterate over all intersection points and find the closest one
-        for (GeoPoint geoPoint : geoList) {
-            double distance = ray.getHead().distance(geoPoint.point);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestPoint = geoPoint;
-            }
-        }
-
-        return closestPoint;
+        return ray.findClosestGeoPoint(scene.geometries.findGeoIntersections(ray));
     }
-
-
 
     /**
      * Calculates the diffusive reflection of the light.
@@ -257,13 +236,7 @@ public class SimpleRayTracer extends RayTracerBase {
         return intensity.scale(material.kS.scale(Math.pow(vr, material.shininess)));
     }
 
-    /**
-     * Calculates the local effects of the light at the given intersection point.
-     *
-     * @param gp  the intersection point
-     * @param ray the ray that intersects the geometry
-     * @return the color at the given intersection point considering local effects of the light
-     */
+
     /**
      * Calculates the local effects (diffusive and specular) of lighting at a given geometry point.
      *
@@ -294,7 +267,7 @@ public class SimpleRayTracer extends RayTracerBase {
             // If the signs of the dot products are the same, calculate the lighting effects
             if ((nl * nv > 0)) {  // sign(nl) == sign(nv)
                 Double3 ktr = transparency(gp, lightSource, l, n, nv); // Transparency coefficient
-                if (ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
+                if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
                     // Scale the light intensity by the transparency coefficient
                     Color iL = lightSource.getIntensity(gp.point).scale(ktr);
 
@@ -307,9 +280,6 @@ public class SimpleRayTracer extends RayTracerBase {
 
         return color; // Return the resulting color
     }
-
-
-
 
 
     /**
