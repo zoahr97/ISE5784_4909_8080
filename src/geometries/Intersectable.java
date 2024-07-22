@@ -26,11 +26,28 @@ public abstract class Intersectable {
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
 
+    /**
+     * Finds the intersection points (as GeoPoints) between the given ray and the geometric shape.
+     * This method serves as a public interface to find intersections, internally delegating the work
+     * to the abstract helper method {@link #findGeoIntersectionsHelper(Ray)}.
+     *
+     * @param ray the ray for which to find intersections with the geometric shape
+     * @return a list of GeoPoints representing the intersection points, or null if there are no intersections
+     */
     public final List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersectionsHelper(ray);
     }
 
+    /**
+     * Helper method to find the intersection points (as GeoPoints) between the given ray and the geometric shape.
+     * This method is abstract and must be implemented by subclasses to define the specific intersection
+     * calculation for different geometric shapes.
+     *
+     * @param ray the ray for which to find intersections with the geometric shape
+     * @return a list of GeoPoints representing the intersection points, or null if there are no intersections
+     */
     protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+
 
 
     /**

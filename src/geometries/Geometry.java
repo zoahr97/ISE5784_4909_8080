@@ -11,8 +11,18 @@ import primitives.Vector;
  * @author Dvora Enav and Zohar Tamsut
  */
 public abstract class Geometry extends Intersectable {
+    /**
+     * The emission color of the geometric shape.
+     * Initialized to black by default.
+     */
     protected Color emission = new Color(java.awt.Color.BLACK);
+
+    /**
+     * The material properties of the geometric shape.
+     * Initialized with default values.
+     */
     private Material material = new Material();
+
 
     /**
      * Gets the material of the object.
@@ -47,8 +57,18 @@ public abstract class Geometry extends Intersectable {
         this.emission = emission;
         return this;
     }
-
+    /**
+     * Calculates the normal vector to the surface at a given point.
+     * This method is abstract and must be implemented by subclasses
+     * to define the specific normal vector calculation for different geometric shapes.
+     *
+     * @param p the point on the surface where the normal vector is to be calculated
+     * @return the normal vector at the given point
+     * @throws IllegalArgumentException if the point does not lie on the surface
+     */
     public abstract Vector getNormal(Point p);
+
+
 
 
 }

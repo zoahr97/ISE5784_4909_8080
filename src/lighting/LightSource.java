@@ -26,9 +26,12 @@ public interface LightSource {
     public Vector getL(Point p);
 
     /**
+     * Calculates the distance between this geometric shape and a given point.
+     * This method determines the shortest distance from the point to the closest part of the shape.
      *
-     * @param point
-     * @return
+     * @param point the point from which to calculate the distance to the geometric shape
+     * @return the distance from the given point to the geometric shape
+     * @throws IllegalArgumentException if the point is null
      */
     double getDistance(Point point);
 

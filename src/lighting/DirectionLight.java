@@ -9,7 +9,13 @@ import primitives.Vector;
  * It extends the Light class and implements the LightSource interface.
  */
 public class DirectionLight extends Light implements LightSource {
+    /**
+     * The direction vector for this geometric shape or ray.
+     * This vector typically represents the direction in which the shape extends
+     */
     private Vector direction;
+
+
 
     /**
      * Constructs a new DirectionLight with the specified intensity and direction.

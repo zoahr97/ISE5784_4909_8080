@@ -16,7 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GeometriesTest {
 
-
+    /**
+     * Unit tests for the {@link Geometries#findIntersections(Ray)} method.
+     * This test case checks the intersection calculations between a ray and multiple geometric objects.
+     */
     @Test
     void testFindIntersections() {
         Geometries geometries = new Geometries(

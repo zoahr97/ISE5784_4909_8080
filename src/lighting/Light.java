@@ -8,6 +8,10 @@ import primitives.Point;
  * It holds the intensity of the light.
  */
 abstract class Light {
+    /**
+     * The intensity of the light source.
+     * This variable represents the color and strength of the light emitted by the light source.
+     */
     protected Color intensity;
 
     /**

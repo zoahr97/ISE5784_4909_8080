@@ -12,8 +12,16 @@ import java.util.List;
  * with a given ray.
  */
 public class Geometries extends Intersectable {
-
+    /**
+     * A list of geometric objects that this shape or scene contains.
+     * This list holds instances of objects that implement the Intersectable interface,
+     * allowing for intersection calculations with rays or other geometric operations.
+     * The list is initialized as a LinkedList.
+     */
     private final List<Intersectable> geometries = new LinkedList<>();
+
+
+
 
     /**
      * Default constructor, initializes an empty list of geometries.

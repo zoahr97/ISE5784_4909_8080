@@ -121,7 +121,13 @@ public class Ray {
         return closestPoint;
     }
 
-
+    /**
+     * Finds the closest point to the origin among the given list of points.
+     * Returns null if the list is null or empty.
+     *
+     * @param points A list of points to search from.
+     * @return The closest point to the origin, or null if the list is empty or null.
+     */
     public Point findClosestPoint(List<Point> points) {
         return points == null || points.isEmpty() ? null
                 : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
