@@ -5,6 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
@@ -24,6 +26,15 @@ public class Camera implements Cloneable {
     private double distance = 0;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    /**
+     * for anti alighting
+     */
+    private int numRaysX, numRaysY;//number of rays for width and length
+
+
+
+
+
 
 
     private Camera() {
@@ -152,6 +163,66 @@ public class Camera implements Cloneable {
     }
 
     /**
+     * Constructs a list of rays passing through a specific pixel.
+     *
+     * @param nx the number of pixels along the x-axis of the view plane
+     * @param ny the number of pixels along the y-axis of the view plane
+     * @param j  the pixel index along the x-axis
+     * @param i  the pixel index along the y-axis
+     * @return a list of rays passing through the specified pixel
+     */
+
+    public List<Ray> constructRays(int nx, int ny, int j, int i) {
+        List<Ray> rays = new ArrayList<>();
+
+        // Calculate the center point of the view plane
+        Point centerPoint = p0.add(vTo.scale(distance));
+
+        // Calculate the height and width of a single pixel
+        double Ry = alignZero(height / ny);
+        double Rx = alignZero(width / nx);
+
+        // Calculate the x and y coordinates of the pixel relative to the center of the view plane
+        double xj = alignZero((j - (nx - 1) / 2.0) * Rx);
+        double yi = alignZero(-(i - (ny - 1) / 2.0) * Ry);
+
+        // Initialize the point pij to the center point of the view plane
+        Point pij = centerPoint;
+
+        // Adjust pij by the horizontal offset
+        if (!isZero(xj)) pij = pij.add(vRight.scale(xj));
+
+        // Adjust pij by the vertical offset
+        if (!isZero(yi)) pij = pij.add(vUp.scale(yi));
+
+        // Calculate the sub-pixel dimensions
+        double subPixelRx = Rx / numRaysX;
+        double subPixelRy = Ry / numRaysY;
+
+        // Generate multiple rays within the pixel
+        for (int u = 0; u < numRaysX; u++) {
+            for (int v = 0; v < numRaysY; v++) {
+                // Calculate the jittered point within the pixel
+                double xOffset = (u + Math.random()) * subPixelRx;
+                double yOffset = (v + Math.random()) * subPixelRy;
+
+                Point jitteredPij = pij;
+                if (!isZero(xOffset)) jitteredPij = jitteredPij.add(vRight.scale(xOffset));
+                if (!isZero(yOffset)) jitteredPij = jitteredPij.add(vUp.scale(yOffset));
+
+                // Create the direction vector from the camera position to the jittered pixel point and normalize it
+                Vector vij = jitteredPij.subtract(p0).normalize();
+
+                // Add the new Ray to the list
+                rays.add(new Ray(p0, vij));
+            }
+        }
+
+        return rays;
+    }
+
+
+    /**
      * Renders the image by casting rays through each pixel and coloring them.
      */
     public Camera renderImage() {
@@ -167,6 +238,34 @@ public class Camera implements Cloneable {
         imageWriter.writeToImage();
         return this;
     }
+    /**
+     * Renders the image with supersampling to reduce aliasing effects.
+     *
+     * This method iterates over each pixel of the image and generates multiple rays for supersampling
+     * to produce a more accurate color for each pixel. The resulting color for each pixel is computed
+     * by averaging the colors obtained from tracing the multiple rays through the scene.
+     *
+     * The supersampling technique helps in improving the image quality by reducing visual artifacts
+     * such as jagged edges and color distortions that can occur with lower sampling rates.
+     *
+     * @return the current Camera instance for method chaining.
+     */
+
+
+    public Camera renderImageWithSupersampling() {
+        int nx = imageWriter.getNx();
+        int ny = imageWriter.getNy();
+
+        for (int i = 0; i < ny; i++) {
+            for (int j = 0; j < nx; j++) {
+                castRays(nx, ny, j, i); // Use the castRays method for supersampling
+            }
+        }
+
+        imageWriter.writeToImage();
+        return this;
+    }
+
 
     /**
      * Writes the image to the output file.
@@ -191,6 +290,29 @@ public class Camera implements Cloneable {
         Color color = rayTracer.traceRay(ray); // Calculate the color of the body the ray intersects
         imageWriter.writePixel(column, row, color);
     }
+    /**
+     * Casts multiple rays through a specific pixel, calculates the average color,
+     * and writes the color to the image.
+     *
+     * @param Nx the number of pixels along the x-axis of the view plane
+     * @param Ny the number of pixels along the y-axis of the view plane
+     * @param column the pixel index along the x-axis
+     * @param row the pixel index along the y-axis
+     */
+    private void castRays(int Nx, int Ny, int column, int row) {
+        // Get the list of rays for the pixel
+        List<Ray> rays = constructRays(Nx, Ny, column, row);
+// Ensure rays list is not empty
+        if (rays == null || rays.isEmpty()) {
+            throw new IllegalArgumentException("Rays list cannot be null or empty");
+        }
+        // Get the average color for the pixel by tracing the rays
+        Color color = rayTracer.traceRays(rays);
+
+        // Write the averaged color to the image
+        imageWriter.writePixel(column, row, color);
+    }
+
 
 
     /**
@@ -265,6 +387,28 @@ public class Camera implements Cloneable {
             camera.rayTracer = ray;
             return this;
         }
+        /**
+         * Sets the number of rays to be cast in the X direction for supersampling.
+         *
+         * @param numRaysX the number of rays to cast in the X direction.
+         * @return the current Builder instance for method chaining.
+         */
+        public Builder setNumRaysX(int numRaysX) {
+            camera.numRaysX = numRaysX;
+            return this;
+        }
+
+        /**
+         * Sets the number of rays to be cast in the Y direction for supersampling.
+         *
+         * @param numRaysY the number of rays to cast in the Y direction.
+         * @return the current Builder instance for method chaining.
+         */
+        public Builder setNumRaysY(int numRaysY) {
+            camera.numRaysY = numRaysY;
+            return this;
+        }
+
 
         /**
          * Sets the distance from the camera to the viewport.
@@ -328,6 +472,11 @@ public class Camera implements Cloneable {
                 throw new MissingResourceException(miss, cs, "imageWriter");
             if (camera.rayTracer == null)
                 throw new MissingResourceException(miss, cs, "rayTracer");
+            // Check if number of rays is set correctly
+            if (camera.numRaysX < 1)
+                throw new MissingResourceException(miss, cs, "numRaysX");
+            if (camera.numRaysY < 1)
+                throw new MissingResourceException(miss, cs, "numRaysY");
             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
             camera.centerPoint = camera.p0.add(camera.vTo.scale(camera.distance));
             // Cloning and returning the camera

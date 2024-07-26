@@ -8,6 +8,7 @@ import primitives.*;
 import scene.Scene;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.AWTEventMulticaster.add;
@@ -89,12 +90,34 @@ public class SimpleRayTracer extends RayTracerBase {
         GeoPoint closestPoint = findClosestIntersection(ray);
         return closestPoint==null?scene.background:
                 calcColor(closestPoint, ray);
-//        var intersections = scene.geometries.findGeoIntersections(ray);
-//        if (intersections == null)
-//            return scene.background;
-//        Intersectable.GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
-//        return calcColor(closestPoint, ray);
     }
+
+    /**
+     * Traces a list of rays and calculates the average color they hit.
+     *
+     * @param rays the list of rays to trace
+     * @return the average color of all the rays
+     */
+    public Color traceRays(List<Ray> rays) {
+        if (rays == null || rays.isEmpty()) {
+            throw new IllegalArgumentException("Rays list cannot be null or empty");
+        }
+        Color finalColor = Color.BLACK;
+
+        for (Ray ray : rays) {
+            Color color = traceRay(ray); // Trace each ray and get the color
+            finalColor = finalColor.add(color); // Add the color to the final color
+        }
+
+        int numRays = rays.size();
+        if (numRays <= 0) {
+            throw new IllegalStateException("Number of rays must be greater than 0");
+        }
+
+        return finalColor.reduce(numRays); // Return the average color
+
+    }
+
 
     /**
      * Calculates the global effect (reflection/refraction) of a ray.
