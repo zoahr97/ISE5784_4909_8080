@@ -472,11 +472,6 @@ public class Camera implements Cloneable {
                 throw new MissingResourceException(miss, cs, "imageWriter");
             if (camera.rayTracer == null)
                 throw new MissingResourceException(miss, cs, "rayTracer");
-            // Check if number of rays is set correctly
-            if (camera.numRaysX < 1)
-                throw new MissingResourceException(miss, cs, "numRaysX");
-            if (camera.numRaysY < 1)
-                throw new MissingResourceException(miss, cs, "numRaysY");
             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
             camera.centerPoint = camera.p0.add(camera.vTo.scale(camera.distance));
             // Cloning and returning the camera

@@ -143,9 +143,1146 @@ public void renderComplexScene() throws CloneNotSupportedException {
             .writeToImage();
 }
 
+    @Test
+    public void renderHouseScene4() throws CloneNotSupportedException {
+        Scene scene = new Scene("House Scene")
+                .setBackground(new Color(135, 206, 235)) // Sky blue background
+                .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+                .setGeometries(new Geometries())
+                .setLights(List.of(
+                        new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+                ));
+
+        // Create the house
+        // House base
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-70, 0, -100),
+                        new Point(70, 0, -100),
+                        new Point(70, 120, -100),
+                        new Point(-70, 120, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // House color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Roof
+        scene.geometries.add(
+                new Triangle(
+                        new Point(-80, 120, -100),
+                        new Point(80, 120, -100),
+                        new Point(0, 180, -100)
+                )
+                        .setEmission(new Color(255, 0, 0)) // Roof color (Red)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-40, 50, -100),
+                        new Point(-10, 50, -100),
+                        new Point(-10, 80, -100),
+                        new Point(-40, 80, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(10, 50, -100),
+                        new Point(40, 50, -100),
+                        new Point(40, 80, -100),
+                        new Point(10, 80, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Door
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-20, 0, -100),
+                        new Point(20, 0, -100),
+                        new Point(20, 50, -100),
+                        new Point(-20, 50, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Door color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Grass
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-200, -1, -300),
+                        new Point(200, -1, -300),
+                        new Point(200, -1, 100),
+                        new Point(-200, -1, 100)
+                )
+                        .setEmission(new Color(34, 139, 34)) // Grass color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Flowers
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                scene.geometries.add(
+                        new Sphere(new Point(-150 + i * 30, 0, -150 + j * 30), 5)
+                                .setEmission(new Color(255, 0, 0)) // Flower color (Red)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+                scene.geometries.add(
+                        new Sphere(new Point(-145 + i * 30, 0, -145 + j * 30), 5)
+                                .setEmission(new Color(255, 20, 147)) // Flower color (Pink)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+            }
+        }
+
+        // Trees
+        scene.geometries.add(
+                new Sphere(new Point(-90, 0, -150), 20)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
 
 
 
+        // Create the camera using the Builder pattern
+        Camera camera = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(new Point(0, 50, 300))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpDistance(300)
+                .setVpSize(300, 300)
+                .setImageWriter(new ImageWriter("HouseScene4", 1000, 1000))
+                .build();
+
+        // Render the image and write to file
+        camera.renderImage()
+                .writeToImage();
+    }
+
+    @Test
+    public void renderHouseScene7() throws CloneNotSupportedException {
+        Scene scene = new Scene("House Scene")
+                .setBackground(new Color(135, 206, 235)) // Sky blue background
+                .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+                .setGeometries(new Geometries())
+                .setLights(List.of(
+                        new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+                ));
+
+        // Create the house
+        // House base
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-90, 0, -100),
+                        new Point(90, 0, -100),
+                        new Point(90, 120, -100),
+                        new Point(-90, 120, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // House color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Roof
+        scene.geometries.add(
+                new Triangle(
+                        new Point(-100, 120, -100),
+                        new Point(100, 120, -100),
+                        new Point(0, 180, -100)
+                )
+                        .setEmission(new Color(255, 0, 0)) // Roof color (Red)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-50, 50, -100),
+                        new Point(-10, 50, -100),
+                        new Point(-10, 90, -100),
+                        new Point(-50, 90, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(10, 50, -100),
+                        new Point(50, 50, -100),
+                        new Point(50, 90, -100),
+                        new Point(10, 90, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Additional windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-50, 50, -100),
+                        new Point(-30, 50, -100),
+                        new Point(-30, 70, -100),
+                        new Point(-50, 70, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(30, 50, -100),
+                        new Point(50, 50, -100),
+                        new Point(50, 70, -100),
+                        new Point(30, 70, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Door
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-30, 0, -100),
+                        new Point(30, 0, -100),
+                        new Point(30, 60, -100),
+                        new Point(-30, 60, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Door color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Grass
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-300, -1, -400),
+                        new Point(300, -1, -400),
+                        new Point(300, -1, 200),
+                        new Point(-300, -1, 200)
+                )
+                        .setEmission(new Color(34, 139, 34)) // Grass color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Flowers
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                scene.geometries.add(
+                        new Sphere(new Point(-200 + i * 40, 0, -200 + j * 40), 6)
+                                .setEmission(new Color(255, 0, 0)) // Flower color (Red)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+                scene.geometries.add(
+                        new Sphere(new Point(-190 + i * 40, 0, -190 + j * 40), 6)
+                                .setEmission(new Color(255, 20, 147)) // Flower color (Pink)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+            }
+        }
+
+        // Trees
+        scene.geometries.add(
+                new Sphere(new Point(-120, 0, -150), 25)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(120, 0, -150), 25)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(-90, 0, -200), 30)
+                        .setEmission(new Color(0, 128, 0)) // Dark Green
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(90, 0, -200), 30)
+                        .setEmission(new Color(0, 128, 0)) // Dark Green
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Fence
+        for (int i = -150; i < 150; i += 10) {
+            scene.geometries.add(
+                    new Polygon(
+                            new Point(i, 0, -300),
+                            new Point(i + 10, 0, -300),
+                            new Point(i + 10, 30, -300),
+                            new Point(i, 30, -300)
+                    )
+                            .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+            );
+        }
+
+        // Sun: Sphere
+        scene.geometries.add(
+                new Sphere(new Point(-200, 300, 200), 50)
+                        .setEmission(new Color(255, 255, 0)) // Sun color (Yellow)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Sun rays: Triangles
+        for (int i = 0; i < 12; i++) {
+            double angle = 2 * Math.PI * i / 12;
+            double x1 = -200 + 50 * Math.cos(angle);
+            double z1 = 200 + 50 * Math.sin(angle);
+            double x2 = -200 + 100 * Math.cos(angle);
+            double z2 = 200 + 100 * Math.sin(angle);
+
+            scene.geometries.add(
+                    new Triangle(
+                            new Point(-200, 300, 200),
+                            new Point(x1, 300, z1),
+                            new Point(x2, 300, z2)
+                    )
+                            .setEmission(new Color(255, 255, 0)) // Sun rays color (Yellow)
+                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+            );
+        }
+
+        // Create the camera using the Builder pattern
+        Camera camera = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(new Point(0, 50, 500))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpDistance(300)
+                .setVpSize(300, 300)
+                .setImageWriter(new ImageWriter("HouseScene8", 1000, 1000))
+                .build();
+
+        // Render the image and write to file
+        camera.renderImage()
+                .writeToImage();
+    }
+
+//    @Test
+//    public void renderHouseScene() throws CloneNotSupportedException {
+//        Scene scene = new Scene("House Scene")
+//                .setBackground(new Color(135, 206, 235)) // Sky blue background
+//                .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+//                .setGeometries(new Geometries())
+//                .setLights(List.of(
+//                        new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+//                                .setKL(0.00001).setKQ(0.000001),
+//                        new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+//                                .setKL(0.00001).setKQ(0.000001),
+//                        new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+//                ));
+//
+//        // Create the house
+//        // House base
+//        scene.geometries.add(
+//                new Polygon(
+//                        new Point(-90, 0, -100),
+//                        new Point(90, 0, -100),
+//                        new Point(90, 120, -100),
+//                        new Point(-90, 120, -100)
+//                )
+//                        .setEmission(new Color(139, 69, 19)) // House color (Brown)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        // Roof
+//        scene.geometries.add(
+//                new Triangle(
+//                        new Point(-100, 120, -100),
+//                        new Point(100, 120, -100),
+//                        new Point(0, 180, -100)
+//                )
+//                        .setEmission(new Color(255, 0, 0)) // Roof color (Red)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//
+//        // הדלת הקדמית
+//        scene.geometries.add(
+//                new Polygon(
+//                        new Point(-20, 0, -100),
+//                        new Point(20, 0, -100),
+//                        new Point(20, 50, -100),
+//                        new Point(-20, 50, -100)
+//                )
+//                        .setEmission(new Color(210, 180, 140)) // צבע הדלת (חום בהיר)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        // החלונות הקדמיים
+//        scene.geometries.add(
+//                new Polygon(
+//                        new Point(-70, 60, -100),
+//                        new Point(-40, 60, -100),
+//                        new Point(-40, 90, -100),
+//                        new Point(-70, 90, -100)
+//                )
+//                        .setEmission(new Color(135, 206, 250)) // צבע החלונות (כחול בהיר)
+//                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+//        );
+//
+//        scene.geometries.add(
+//                new Polygon(
+//                        new Point(40, 60, -100),
+//                        new Point(70, 60, -100),
+//                        new Point(70, 90, -100),
+//                        new Point(40, 90, -100)
+//                )
+//                        .setEmission(new Color(135, 206, 250)) // צבע החלונות (כחול בהיר)
+//                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+//        );
+//        // Grass
+//        scene.geometries.add(
+//                new Polygon(
+//                        new Point(-300, -1, -400),
+//                        new Point(300, -1, -400),
+//                        new Point(300, -1, 200),
+//                        new Point(-300, -1, 200)
+//                )
+//                        .setEmission(new Color(34, 139, 34)) // Grass color (Green)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        // Flowers
+//        for (int i = 0; i < 10; i++) {
+//            for (int j = 0; j < 10; j++) {
+//                scene.geometries.add(
+//                        new Sphere(new Point(-200 + i * 40, 0, -200 + j * 40), 6)
+//                                .setEmission(new Color(255, 0, 0)) // Flower color (Red)
+//                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//                );
+//                scene.geometries.add(
+//                        new Sphere(new Point(-190 + i * 40, 0, -190 + j * 40), 6)
+//                                .setEmission(new Color(255, 20, 147)) // Flower color (Pink)
+//                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//                );
+//            }
+//        }
+//
+//        // Trees
+//        scene.geometries.add(
+//                new Sphere(new Point(-120, 0, -150), 25)
+//                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        scene.geometries.add(
+//                new Sphere(new Point(120, 0, -150), 25)
+//                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        scene.geometries.add(
+//                new Sphere(new Point(-90, 0, -200), 30)
+//                        .setEmission(new Color(0, 128, 0)) // Dark Green
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        scene.geometries.add(
+//                new Sphere(new Point(90, 0, -200), 30)
+//                        .setEmission(new Color(0, 128, 0)) // Dark Green
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        scene.geometries.add(
+//                new Sphere(new Point(-150, 0, -100), 20)
+//                        .setEmission(new Color(50, 205, 50)) // Lime Green
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        // Clouds
+//        scene.geometries.add(
+//                new Sphere(new Point(-200, 150, -50), 50)
+//                        .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        scene.geometries.add(
+//                new Sphere(new Point(200, 150, -50), 50)
+//                        .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+//                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//        );
+//
+//        // Fence
+//        for (int i = -250; i <= 250; i += 20) {
+//            scene.geometries.add(
+//                    new Polygon(
+//                            new Point(i, 0, -300),
+//                            new Point(i + 10, 0, -300),
+//                            new Point(i + 10, 30, -300),
+//                            new Point(i, 30, -300)
+//                    )
+//                            .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+//                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+//            );
+//        }
+//
+////        // Sun
+////        // Sun body (Sphere)
+////        scene.geometries.add(
+////                new Sphere(new Point(-200, 300, 200), 50)
+////                        .setEmission(new Color(255, 255, 0)) // Sun color (Yellow)
+////                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+////        );
+////
+////        // Sun rays (Triangles)
+////        for (int i = 0; i < 12; i++) {
+////            double angle = 2 * Math.PI * i / 12;
+////            double x1 = -200 + 50 * Math.cos(angle);
+////            double z1 = 200 + 50 * Math.sin(angle);
+////            double x2 = -200 + 100 * Math.cos(angle);
+////            double z2 = 200 + 100 * Math.sin(angle);
+////
+////            scene.geometries.add(
+////                    new Triangle(
+////                            new Point(-200, 300, 200),
+////                            new Point(x1, 300, z1),
+////                            new Point(x2, 300, z2)
+////                    )
+////                            .setEmission(new Color(255, 255, 0)) // Sun rays color (Yellow)
+////                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+////            );
+////        }
+//        // Create the camera using the Builder pattern
+//        Camera camera = Camera.getBuilder()
+//                .setRayTracer(new SimpleRayTracer(scene))
+//                .setLocation(new Point(0, 50, 300))
+//                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+//                .setVpDistance(300)
+//                .setVpSize(300, 300)
+//                .setImageWriter(new ImageWriter("HouseScene5", 1000, 1000))
+//                .build();
+//
+//        // Render the image and write to file
+//        camera.renderImage()
+//                .writeToImage();
+//    }
+@Test
+public void renderHouseScene() throws CloneNotSupportedException {
+    Scene scene = new Scene("House Scene")
+            .setBackground(new Color(135, 206, 235)) // Sky blue background
+            .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+            .setGeometries(new Geometries())
+            .setLights(List.of(
+                    new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+                            .setKL(0.00001).setKQ(0.000001),
+                    new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+                            .setKL(0.00001).setKQ(0.000001),
+                    new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+            ));
+
+    // Create the house
+    // House base
+    scene.geometries.add(
+            new Polygon(
+                    new Point(-90, 0, -100),
+                    new Point(90, 0, -100),
+                    new Point(90, 120, -100),
+                    new Point(-90, 120, -100)
+            )
+                    .setEmission(new Color(139, 69, 19)) // House color (Brown)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Roof
+    scene.geometries.add(
+            new Triangle(
+                    new Point(-100, 120, -100),
+                    new Point(100, 120, -100),
+                    new Point(0, 180, -100)
+            )
+                    .setEmission(new Color(255, 0, 0)) // Roof color (Red)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Front door
+    scene.geometries.add(
+            new Polygon(
+                    new Point(-20, 0, -99),
+                    new Point(20, 0, -99),
+                    new Point(20, 50, -99),
+                    new Point(-20, 50, -99)
+            )
+                    .setEmission(new Color(139, 69, 19)) // Door color (Brown)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Front windows
+    scene.geometries.add(
+            new Polygon(
+                    new Point(-70, 60, -99),
+                    new Point(-40, 60, -99),
+                    new Point(-40, 90, -99),
+                    new Point(-70, 90, -99)
+            )
+                    .setEmission(new Color(139, 69, 19)) // Window color (Brown)
+                    .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+    );
+
+    scene.geometries.add(
+            new Polygon(
+                    new Point(40, 60, -99),
+                    new Point(70, 60, -99),
+                    new Point(70, 90, -99),
+                    new Point(40, 90, -99)
+            )
+                    .setEmission(new Color(139, 69, 19)) // Window color (Brown)
+                    .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+    );
+
+    // Adding window bars
+    scene.geometries.add(
+            new Polygon(
+                    new Point(-55, 60, -99),
+                    new Point(-55, 90, -99),
+                    new Point(-45, 90, -99),
+                    new Point(-45, 60, -99)
+            )
+                    .setEmission(new Color(0, 0, 0)) // Bars color (Black)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Polygon(
+                    new Point(-70, 75, -99),
+                    new Point(-40, 75, -99),
+                    new Point(-40, 65, -99),
+                    new Point(-70, 65, -99)
+            )
+                    .setEmission(new Color(0, 0, 0)) // Bars color (Black)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Polygon(
+                    new Point(55, 60, -99),
+                    new Point(55, 90, -99),
+                    new Point(45, 90, -99),
+                    new Point(45, 60, -99)
+            )
+                    .setEmission(new Color(0, 0, 0)) // Bars color (Black)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Polygon(
+                    new Point(70, 75, -99),
+                    new Point(40, 75, -99),
+                    new Point(40, 65, -99),
+                    new Point(70, 65, -99)
+            )
+                    .setEmission(new Color(0, 0, 0)) // Bars color (Black)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Grass
+    scene.geometries.add(
+            new Polygon(
+                    new Point(-300, -1, -400),
+                    new Point(300, -1, -400),
+                    new Point(300, -1, 200),
+                    new Point(-300, -1, 200)
+            )
+                    .setEmission(new Color(34, 139, 34)) // Grass color (Green)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Flowers
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            scene.geometries.add(
+                    new Sphere(new Point(-200 + i * 40, 0, -200 + j * 40), 6)
+                            .setEmission(new Color(255, 0, 0)) // Flower color (Red)
+                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+            );
+            scene.geometries.add(
+                    new Sphere(new Point(-190 + i * 40, 0, -190 + j * 40), 6)
+                            .setEmission(new Color(255, 20, 147)) // Flower color (Pink)
+                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+            );
+        }
+    }
+
+    // Trees
+    scene.geometries.add(
+            new Sphere(new Point(-120, 0, -150), 25)
+                    .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Sphere(new Point(120, 0, -150), 25)
+                    .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Sphere(new Point(-90, 0, -200), 30)
+                    .setEmission(new Color(0, 128, 0)) // Dark Green
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Sphere(new Point(90, 0, -200), 30)
+                    .setEmission(new Color(0, 128, 0)) // Dark Green
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Sphere(new Point(-150, 0, -100), 20)
+                    .setEmission(new Color(50, 205, 50)) // Lime Green
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Clouds
+    scene.geometries.add(
+            new Sphere(new Point(-200, 150, -50), 50)
+                    .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    scene.geometries.add(
+            new Sphere(new Point(200, 150, -50), 50)
+                    .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+                    .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+    );
+
+    // Fence
+    for (int i = -250; i <= 250; i += 20) {
+        scene.geometries.add(
+                new Polygon(
+                        new Point(i, 0, -300),
+                        new Point(i + 10, 0, -300),
+                        new Point(i + 10, 30, -300),
+                        new Point(i, 30, -300)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+    }
+
+    // Create the camera using the Builder pattern
+    Camera camera = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setLocation(new Point(0, 50, 300))
+            .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+            .setVpDistance(300)
+            .setVpSize(300, 300)
+            .setImageWriter(new ImageWriter("HouseScene5", 1000, 1000))
+            .build();
+
+    // Render the image and write to file
+    camera.renderImage()
+            .writeToImage();
+}
+
+
+    @Test
+    public void renderHouseScene2() throws CloneNotSupportedException {
+        Scene scene = new Scene("House Scene")
+                .setBackground(new Color(135, 206, 235)) // Sky blue background
+                .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+                .setGeometries(new Geometries())
+                .setLights(List.of(
+                        new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+                ));
+
+        // Create the house
+        // House base
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-90, 0, -100),
+                        new Point(90, 0, -100),
+                        new Point(90, 120, -100),
+                        new Point(-90, 120, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // House color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Roof
+        scene.geometries.add(
+                new Triangle(
+                        new Point(-100, 120, -100),
+                        new Point(100, 120, -100),
+                        new Point(0, 180, -100)
+                )
+                        .setEmission(new Color(255, 0, 0)) // Roof color (Red)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-50, 50, -100),
+                        new Point(-10, 50, -100),
+                        new Point(-10, 90, -100),
+                        new Point(-50, 90, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(10, 50, -100),
+                        new Point(50, 50, -100),
+                        new Point(50, 90, -100),
+                        new Point(10, 90, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Add more windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-50, 50, -100),
+                        new Point(-30, 50, -100),
+                        new Point(-30, 70, -100),
+                        new Point(-50, 70, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(30, 50, -100),
+                        new Point(50, 50, -100),
+                        new Point(50, 70, -100),
+                        new Point(30, 70, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Door
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-30, 0, -100),
+                        new Point(30, 0, -100),
+                        new Point(30, 60, -100),
+                        new Point(-30, 60, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Door color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Grass
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-250, -1, -350),
+                        new Point(250, -1, -350),
+                        new Point(250, -1, 150),
+                        new Point(-250, -1, 150)
+                )
+                        .setEmission(new Color(34, 139, 34)) // Grass color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Flowers
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                scene.geometries.add(
+                        new Sphere(new Point(-175 + i * 35, 0, -175 + j * 35), 6)
+                                .setEmission(new Color(255, 0, 0)) // Flower color (Red)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+                scene.geometries.add(
+                        new Sphere(new Point(-170 + i * 35, 0, -170 + j * 35), 6)
+                                .setEmission(new Color(255, 20, 147)) // Flower color (Pink)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+            }
+        }
+
+        // Trees
+        scene.geometries.add(
+                new Sphere(new Point(-120, 0, -150), 25)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(120, 0, -150), 25)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(-90, 0, -200), 30)
+                        .setEmission(new Color(0, 128, 0)) // Dark Green
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(90, 0, -200), 30)
+                        .setEmission(new Color(0, 128, 0)) // Dark Green
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(-150, 0, -100), 20)
+                        .setEmission(new Color(50, 205, 50)) // Lime Green
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Clouds
+        scene.geometries.add(
+                new Sphere(new Point(-200, 150, -50), 50)
+                        .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(200, 150, -50), 50)
+                        .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Fence
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-250, 0, -350),
+                        new Point(-230, 0, -350),
+                        new Point(-230, 30, -350),
+                        new Point(-250, 30, -350)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(230, 0, -350),
+                        new Point(250, 0, -350),
+                        new Point(250, 30, -350),
+                        new Point(230, 30, -350)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-250, 0, 150),
+                        new Point(-230, 0, 150),
+                        new Point(-230, 30, 150),
+                        new Point(-250, 30, 150)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(230, 0, 150),
+                        new Point(250, 0, 150),
+                        new Point(250, 30, 150),
+                        new Point(230, 30, 150)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Fence color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Create the camera using the Builder pattern
+        Camera camera = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(new Point(0, 50, 300))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpDistance(300)
+                .setVpSize(300, 300)
+                .setImageWriter(new ImageWriter("HouseScene2", 1000, 1000))
+                .build();
+
+        // Render the image and write to file
+        camera.renderImage()
+                .writeToImage();
+    }
+
+    @Test
+    public void renderHouseScene1() throws CloneNotSupportedException {
+        Scene scene = new Scene("House Scene")
+                .setBackground(new Color(135, 206, 235)) // Sky blue background
+                .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+                .setGeometries(new Geometries())
+                .setLights(List.of(
+                        new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+                ));
+
+        // Create the house
+        // House base
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-90, 0, -100),
+                        new Point(90, 0, -100),
+                        new Point(90, 120, -100),
+                        new Point(-90, 120, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // House color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Roof
+        scene.geometries.add(
+                new Triangle(
+                        new Point(-100, 120, -100),
+                        new Point(100, 120, -100),
+                        new Point(0, 180, -100)
+                )
+                        .setEmission(new Color(255, 0, 0)) // Roof color (Red)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-50, 50, -100),
+                        new Point(-10, 50, -100),
+                        new Point(-10, 90, -100),
+                        new Point(-50, 90, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(10, 50, -100),
+                        new Point(50, 50, -100),
+                        new Point(50, 90, -100),
+                        new Point(10, 90, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Add more windows
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-50, 50, -100),
+                        new Point(-30, 50, -100),
+                        new Point(-30, 70, -100),
+                        new Point(-50, 70, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        scene.geometries.add(
+                new Polygon(
+                        new Point(30, 50, -100),
+                        new Point(50, 50, -100),
+                        new Point(50, 70, -100),
+                        new Point(30, 70, -100)
+                )
+                        .setEmission(new Color(173, 216, 230)) // Window color (Light Blue)
+                        .setMaterial(new Material().setKD(0.2).setKS(0.8).setShininess(200).setkT(new Double3(0.9)))
+        );
+
+        // Door
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-30, 0, -100),
+                        new Point(30, 0, -100),
+                        new Point(30, 60, -100),
+                        new Point(-30, 60, -100)
+                )
+                        .setEmission(new Color(139, 69, 19)) // Door color (Brown)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Grass
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-250, -1, -350),
+                        new Point(250, -1, -350),
+                        new Point(250, -1, 150),
+                        new Point(-250, -1, 150)
+                )
+                        .setEmission(new Color(34, 139, 34)) // Grass color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Flowers
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                scene.geometries.add(
+                        new Sphere(new Point(-175 + i * 35, 0, -175 + j * 35), 6)
+                                .setEmission(new Color(255, 0, 0)) // Flower color (Red)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+                scene.geometries.add(
+                        new Sphere(new Point(-170 + i * 35, 0, -170 + j * 35), 6)
+                                .setEmission(new Color(255, 20, 147)) // Flower color (Pink)
+                                .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+                );
+            }
+        }
+
+        // Trees
+        scene.geometries.add(
+                new Sphere(new Point(-120, 0, -150), 25)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(120, 0, -150), 25)
+                        .setEmission(new Color(34, 139, 34)) // Tree leaves color (Green)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Clouds
+        scene.geometries.add(
+                new Sphere(new Point(-200, 150, -50), 50)
+                        .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        scene.geometries.add(
+                new Sphere(new Point(200, 150, -50), 50)
+                        .setEmission(new Color(255, 255, 255)) // Cloud color (White)
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Create the camera using the Builder pattern
+        Camera camera = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(new Point(0, 50, 300))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpDistance(300)
+                .setVpSize(300, 300)
+                .setImageWriter(new ImageWriter("HouseScene1", 1000, 1000))
+                .build();
+
+        // Render the image and write to file
+        camera.renderImage()
+                .writeToImage();
+    }
 
     /**
      *
@@ -229,6 +1366,86 @@ public void renderComplexScene() throws CloneNotSupportedException {
         // Render the image and write to file
         camera.renderImageWithSupersampling()
                 .writeToImage();
+    }
+
+    @Test
+    public void renderBuilding() throws CloneNotSupportedException {
+        // Create the scene
+        Scene scene = new Scene("Building Scene")
+                .setBackground(new Color(20, 20, 20))
+                .setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)))
+                .setGeometries(new Geometries())
+                .setLights(List.of(
+                        new SpotLight(new Color(400, 300, 300), new Point(200, 200, 200), new Vector(-1, -1, -2))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new PointLight(new Color(500, 300, 300), new Point(-200, -200, -200))
+                                .setKL(0.00001).setKQ(0.000001),
+                        new DirectionLight(new Color(300, 200, 200), new Vector(1, -1, -1))
+                ));
+
+        // Building body
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-150, 0, 0),
+                        new Point(150, 0, 0),
+                        new Point(150, 200, 0),
+                        new Point(-150, 200, 0)
+                )
+                        .setEmission(new Color(150, 75, 0)) // צבע לבנים
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Roof
+        scene.geometries.add(
+                new Triangle(
+                        new Point(-150, 200, 0),
+                        new Point(150, 200, 0),
+                        new Point(0, 300, 0)
+                )
+                        .setEmission(new Color(120, 60, 0)) // צבע הגג
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Windows
+        for (int i = -1; i <= 1; i += 2) {
+            scene.geometries.add(
+                    new Polygon(
+                            new Point(i * 50 - 30, 100, 1),
+                            new Point(i * 50 + 30, 100, 1),
+                            new Point(i * 50 + 30, 150, 1),
+                            new Point(i * 50 - 30, 150, 1)
+                    )
+                            .setEmission(new Color(200, 200, 255)) // צבע חלון
+                            .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100).setkT(new Double3(0.5)))
+            );
+        }
+
+        // Door
+        scene.geometries.add(
+                new Polygon(
+                        new Point(-30, 0, 1),
+                        new Point(30, 0, 1),
+                        new Point(30, 75, 1),
+                        new Point(-30, 75, 1)
+                )
+                        .setEmission(new Color(139, 69, 19)) // צבע דלת
+                        .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
+        );
+
+        // Create the camera using the Builder pattern
+        Camera camera = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(new Point(0, 0, 500))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpDistance(500)
+                .setVpSize(500, 500)
+                .setImageWriter(new ImageWriter("building_render", 1000, 1000))
+                .setNumRaysX(5)
+                .setNumRaysY(5)
+                .build();
+
+        // Render the image and write to file
+        camera.renderImageWithSupersampling().writeToImage();
     }
 
     /**
