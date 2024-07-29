@@ -697,6 +697,17 @@ public void renderHouseScene() throws CloneNotSupportedException {
                     .setEmission(new Color(139, 69, 19)) // House color (Brown)
                     .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(100))
     );
+    Geometry door = new Polygon(
+            new Point(-15, 0, -99),
+            new Point(15, 0, -99),
+            new Point(15, 80, -99),
+            new Point(-15, 80, -99)
+    )
+            .setEmission(new Color(139, 69, 19)) ;// Door color (Brown)
+
+
+    scene.geometries.add(door);
+
 
     // Roof
     scene.geometries.add(
