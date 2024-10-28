@@ -1,7 +1,9 @@
 package renderer;
 
 import primitives.Color;
+import primitives.Point;
 import primitives.Ray;
+import primitives.Vector;
 import scene.Scene;
 
 import java.util.List;
@@ -30,15 +32,19 @@ public abstract class RayTracerBase {
      * @return the color produced by tracing the ray
      */
     public abstract Color traceRay(Ray ray);
-    /** for supersampling.
+
+    /**
+     * for supersampling.
      * Traces a list of rays through the scene to determine the color at the intersection points.
      *
      * @param rays the list of rays to be traced through the scene.
      * @return the color resulting from tracing the given rays, which may be an average or a combined color
-     *         depending on the implementation.
-     * @throws NullPointerException if the provided rays list is null.
+     * depending on the implementation.
+     * @throws NullPointerException     if the provided rays list is null.
      * @throws IllegalArgumentException if the rays list is empty.
      */
     public abstract Color traceRays(List<Ray> rays);
+    public abstract Color AdaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLoc, Vector Vright, Vector Vup, List<Point> prePoints);
+
 
 }

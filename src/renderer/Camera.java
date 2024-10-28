@@ -4,18 +4,31 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.MissingResourceException;
+import java.util.stream.IntStream;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+import java.util.stream.*;
+
 
 /**
  * Represents a camera used for rendering scenes.
  */
 public class Camera implements Cloneable {
+    private final int SPARE_THREADS = 2; // Spare threads if trying to use all the coresprivate
+    double printInterval = 0; // printing progress percentage interval
     private Point p0; // Camera location
     private Vector vUp; // Upward direction
     private Vector vTo; // Forward direction
@@ -28,18 +41,22 @@ public class Camera implements Cloneable {
     private RayTracerBase rayTracer;
     /**
      * for anti alighting
+     * number of rays for width and length
      */
-    private int numRaysX, numRaysY;//number of rays for width and length
-
-
-
+    private int numRaysX, numRaysY;
+    /**
+     * Manages pixel allocation and tracks rendering progress.
+     */
+    private PixelManager pixelManager;
+    private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+    private boolean antiAliasing = false; // Disable anti-aliasing by default
+    private boolean adaptiveSupersampling = true; // Default value
 
 
 
 
     private Camera() {
     }
-
     /**
      * Gets a builder for creating a camera.
      *
@@ -49,6 +66,7 @@ public class Camera implements Cloneable {
         return new Builder();
     }
 
+
     /**
      * Gets the position of the camera.
      *
@@ -57,7 +75,6 @@ public class Camera implements Cloneable {
     public Point getPosition() {
         return p0;
     }
-
     /**
      * Gets the forward direction of the camera.
      *
@@ -66,7 +83,6 @@ public class Camera implements Cloneable {
     public Vector getvTo() {
         return vTo;
     }
-
     /**
      * Gets the right direction of the camera.
      *
@@ -122,6 +138,7 @@ public class Camera implements Cloneable {
             throw new AssertionError();
         }
     }
+
 
     /**
      * Constructs a ray through a specified pixel in the view plane.
@@ -238,13 +255,15 @@ public class Camera implements Cloneable {
         imageWriter.writeToImage();
         return this;
     }
+
+
     /**
      * Renders the image with supersampling to reduce aliasing effects.
-     *
+     * <p>
      * This method iterates over each pixel of the image and generates multiple rays for supersampling
      * to produce a more accurate color for each pixel. The resulting color for each pixel is computed
      * by averaging the colors obtained from tracing the multiple rays through the scene.
-     *
+     * <p>
      * The supersampling technique helps in improving the image quality by reducing visual artifacts
      * such as jagged edges and color distortions that can occur with lower sampling rates.
      *
@@ -280,16 +299,30 @@ public class Camera implements Cloneable {
      * traces the ray to determine the color at the intersection point,
      * and writes the color to the image.
      *
-     * @param Nx      the number of pixels in the horizontal direction of the view plane
-     * @param Ny      the number of pixels in the vertical direction of the view plane
-     * @param column  the column index of the pixel on the view plane
-     * @param row     the row index of the pixel on the view plane
+     * @param Nx     the number of pixels in the horizontal direction of the view plane
+     * @param Ny     the number of pixels in the vertical direction of the view plane
+     * @param column the column index of the pixel on the view plane
+     * @param row    the row index of the pixel on the view plane
      */
     private void castRay(int Nx, int Ny, int column, int row) {
         Ray ray = constructRay(Nx, Ny, column, row);
         Color color = rayTracer.traceRay(ray); // Calculate the color of the body the ray intersects
         imageWriter.writePixel(column, row, color);
     }
+
+    /**
+     * Casts a ray from the camera through a specific pixel in the image grid and updates the PixelManager.
+     *
+     * @param nX  the number of columns in the image grid.
+     * @param nY  the number of rows in the image grid.
+     * @param col the column index of the pixel.
+     * @param row the row index of the pixel.
+     */
+    private void castRayPixel(int nX, int nY, int col, int row) {
+        imageWriter.writePixel(col, row, rayTracer.traceRay(constructRay(nX, nY, col, row)));
+        pixelManager.pixelDone();
+    }
+
     /**
      * Casts multiple rays through a specific pixel, calculates the average color,
      * and writes the color to the image.
@@ -299,7 +332,7 @@ public class Camera implements Cloneable {
      * @param column the pixel index along the x-axis
      * @param row the pixel index along the y-axis
      */
-    private void castRays(int Nx, int Ny, int column, int row) {
+    private void castRays ( int Nx, int Ny, int column, int row){
         // Get the list of rays for the pixel
         List<Ray> rays = constructRays(Nx, Ny, column, row);
 // Ensure rays list is not empty
@@ -314,7 +347,6 @@ public class Camera implements Cloneable {
     }
 
 
-
     /**
      * Prints a grid on the image with the specified color and interval.
      * The grid lines will be drawn every 'interval' pixels both horizontally and vertically.
@@ -322,7 +354,7 @@ public class Camera implements Cloneable {
      * @param interval the interval between the grid lines in pixels.
      * @param color    the color of the grid lines.
      */
-    public Camera printGrid(int interval, Color color) {
+    public Camera printGrid ( int interval, Color color){
         for (int i = 0; i < imageWriter.getNy(); i++) {
             for (int j = 0; j < imageWriter.getNx(); j++) {
                 // Check if the current pixel is on a grid line
@@ -331,14 +363,85 @@ public class Camera implements Cloneable {
                 }
             }
         }
-        imageWriter.writeToImage();
         return this;
     }
 
 
+
+
+    private void castRaysWithAdaptiveSupersampling(int nX, int nY, int j, int i) {
+        // יצירת קרן לפי המיקום הנוכחי של הפיקסל
+        Ray ray = constructRay(nX, nY, j, i);
+        Vector direction = ray.getDirection();
+
+        // טיפול במקרה של וקטור אפס
+        if (direction.equals(Vector.ZERO)) {
+            System.err.println("Error: Zero vector encountered. Skipping this ray.");
+            return;
+        }
+
+        double pixelWidth = width / nX;
+        double pixelHeight = height / nY;
+        Point centerP = p0.add(direction.scale(pixelWidth / 2))
+                .add(vRight.scale((j - nX / 2.0) * pixelWidth))
+                .add(vUp.scale((i - nY / 2.0) * pixelHeight));
+
+        // חישוב החלקת עקומות (אם נדרש)
+        double minWidth = pixelWidth / 4;
+        double minHeight = pixelHeight / 4;
+
+        // קריאה לפונקציה עם פרמטרים נכונים
+        Color color = rayTracer.AdaptiveSuperSamplingRec(centerP, pixelWidth, pixelHeight, minWidth, minHeight, p0, vRight, vUp, new ArrayList<>());
+
+        // כתיבה לפיקסל
+        imageWriter.writePixel(j, i, color);
+    }
+
     /**
-     * Builder class for constructing camera objects.
+     * Renders the image using multithreading. If the number of threads is set to 0,
+     * the rendering is done in a single thread. If the number of threads is set to -1,
+     * the rendering is done using the maximum available threads.
+     *
+     * @return the Camera object, allowing method chaining.
      */
+    public Camera renderImageMultyThreading() {
+        final int nX = imageWriter.getNx();
+        final int nY = imageWriter.getNy();
+        pixelManager = new PixelManager(nY, nX, printInterval);
+
+        if (threadsCount == 0) {
+            for (int i = 0; i < nY; ++i) {
+                for (int j = 0; j < nX; ++j) {
+                    if (adaptiveSupersampling) {
+                        castRaysWithAdaptiveSupersampling(nX, nY, j, i); // Adaptive Supersampling
+                    } else if (antiAliasing) {
+                        castRays(nX, nY, j, i); // Anti-aliasing
+                    } else {
+                        castRay(nX, nY, j, i); // Regular rendering
+                    }
+                }
+            }
+        } else if (threadsCount == -1) {
+            IntStream.range(0, nY).parallel()
+                    .forEach(i -> IntStream.range(0, nX).parallel()
+                            .forEach(j -> {
+                                if (adaptiveSupersampling) {
+                                    castRaysWithAdaptiveSupersampling(nX, nY, j, i); // Adaptive Supersampling
+                                } else if (antiAliasing) {
+                                    castRays(nX, nY, j, i); // Anti-aliasing
+                                } else {
+                                    castRayPixel(nX, nY, j, i); // Regular rendering
+                                }
+                            }));
+        }
+
+        return this;
+}
+
+
+            /**
+             * Builder class for constructing camera objects.
+             */
     public static class Builder {
         private Camera camera;
 
@@ -387,6 +490,7 @@ public class Camera implements Cloneable {
             camera.rayTracer = ray;
             return this;
         }
+
         /**
          * Sets the number of rays to be cast in the X direction for supersampling.
          *
@@ -406,6 +510,60 @@ public class Camera implements Cloneable {
          */
         public Builder setNumRaysY(int numRaysY) {
             camera.numRaysY = numRaysY;
+            return this;
+        }
+
+        /**
+         * Sets the anti-aliasing flag.
+         *
+         * @param antiAliasing true to enable anti-aliasing, false to disable.
+         * @return the Camera object, allowing method chaining.
+         */
+        public Builder setAntiAliasing(boolean antiAliasing) {
+            camera.antiAliasing = antiAliasing;
+            return this;
+        }
+
+        /**
+         *
+         * @param useAdaptiveSupersampling
+         * @return
+         */
+        public Builder setUseAdaptiveSupersampling(boolean useAdaptiveSupersampling) {
+            camera.adaptiveSupersampling = useAdaptiveSupersampling;
+            return this;
+        }
+
+
+
+        /**
+         * Sets the number of threads to be used for multithreading.
+         *
+         * @param threads the number of threads to use.
+         *                If threads is -2, the number of threads is set to the number of available processors minus the spare threads.
+         *                If threads is -1 or higher, it sets the exact number of threads.
+         *                If threads is less than -2, an {@link IllegalArgumentException} is thrown.
+         * @return the current Builder instance for method chaining.
+         * @throws IllegalArgumentException if threads is less than -2.
+         */
+        public Builder setMultithreading(int threads) {
+            if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
+            if (threads >= -1) camera.threadsCount = threads;
+            else { // == -2
+                int cores = Runtime.getRuntime().availableProcessors() - camera.SPARE_THREADS;
+                camera.threadsCount = cores <= 2 ? 1 : cores;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the interval for debug print statements.
+         *
+         * @param interval the interval in seconds between debug print statements.
+         * @return the current Builder instance for method chaining.
+         */
+        public Builder setDebugPrint(double interval) {
+            camera.printInterval = interval;
             return this;
         }
 

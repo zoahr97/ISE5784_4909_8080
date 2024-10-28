@@ -152,4 +152,12 @@ public class Double3 {
     public boolean lowerThan(Double3 other) {
         return d1 < other.d1 && d2 < other.d2 && d3 < other.d3;
     }
+    /**
+     * Calculate the length (magnitude) of the Double3 vector.
+     *
+     * @return The length of the vector.
+     */
+    public double length() {
+        return Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+    }
 }

@@ -105,7 +105,50 @@ public class Color {
             throw new IllegalArgumentException("Can't scale a color by a negative number");
         return new Color(rgb.product(k));
     }
+    /**
+     * Subtracts another color from this color and returns the resulting color.
+     * Each RGB component is subtracted separately.
+     *
+     * @param other The other color to subtract from this color.
+     * @return A new Color representing the difference between the two colors.
+     */
+    public Color subtract(Color other) {
+        Double3 result = this.rgb.subtract(other.rgb);
+        return new Color(
+                Math.max(0, result.d1),
+                Math.max(0, result.d2),
+                Math.max(0, result.d3)
+        );
+    }
+    /**
+     * Checks if the color is almost equal
+     * @param color primitives
+     * @return
+     */
+    public  boolean isAlmostEquals(primitives.Color color) {
 
+        return  (Math.abs(this.rgb.d1-color.rgb.d1)<= 2) &&
+                (Math.abs(this.rgb.d2-color.rgb.d2)<= 2) &&
+                (Math.abs(this.rgb.d3-color.rgb.d3)<= 2);
+    }
+    /**
+     * Calculates the length of the color vector (used for color difference calculation).
+     *
+     * @return The length of the color vector.
+     */
+    public double length() {
+        return rgb.length();
+    }
+    /**
+     * Determines if the difference between two colors is significant based on a given threshold.
+     *
+     * @param other The other color to compare against.
+     * @param threshold The threshold value for determining significance.
+     * @return True if the difference between the colors is greater than the threshold, otherwise false.
+     */
+    public boolean isSignificantDifference(Color other, double threshold) {
+        return this.subtract(other).length() > threshold;
+    }
     /**
      * Scale the color by a scalar
      *
@@ -116,6 +159,7 @@ public class Color {
         if (k < 0.0) throw new IllegalArgumentException("Can't scale a color by a negative number");
         return new Color(rgb.scale(k));
     }
+
 
     /**
      * Scale the color by (1 / reduction factor)

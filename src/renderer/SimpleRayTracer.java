@@ -5,11 +5,11 @@ import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 import lighting.LightSource;
 import primitives.*;
+import primitives.Vector;
 import scene.Scene;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.awt.AWTEventMulticaster.add;
 import static primitives.Util.alignZero;
@@ -43,16 +43,17 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      *
      */
-    private static final Double3 INITIAL_K=Double3.ONE;
+    private static final Double3 INITIAL_K = Double3.ONE;
+
     /**
      * Determines if a given point is unshaded by any objects in the scene.
      *
-     * @param gp  The geometric point being checked.
-     * @param l   The vector from the light source to the point.
-     * @param n   The normal vector at the point (not used in this method but may be relevant in other contexts).
-     * @return    True if the point is unshaded, false if it is shaded.
+     * @param gp The geometric point being checked.
+     * @param l  The vector from the light source to the point.
+     * @param n  The normal vector at the point (not used in this method but may be relevant in other contexts).
+     * @return True if the point is unshaded, false if it is shaded.
      */
-    private boolean unshaded(GeoPoint gp,LightSource light,Vector l , Vector n,double nl) {
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
 
         // Calculate the direction from the point to the light source
         Vector lightDirection = l.scale(-1); // from point to light source
@@ -63,9 +64,9 @@ public class SimpleRayTracer extends RayTracerBase {
         // Find intersections of the ray with objects in the scene
         List<Point> intersections = scene.geometries.findIntersections(ray);
         // If there are no intersections, the point is unshaded
-        if(intersections==null)return true;
-        for(Point intersection : intersections) {
-            if(light.getDistance(intersection)>intersection.distance(ray.getHead()))return false;
+        if (intersections == null) return true;
+        for (Point intersection : intersections) {
+            if (light.getDistance(intersection) > intersection.distance(ray.getHead())) return false;
         }
         return true;
     }
@@ -88,8 +89,11 @@ public class SimpleRayTracer extends RayTracerBase {
     @Override
     public Color traceRay(Ray ray) {
         GeoPoint closestPoint = findClosestIntersection(ray);
-        return closestPoint==null?scene.background:
+        return closestPoint == null ? scene.background :
                 calcColor(closestPoint, ray);
+    }
+    public Color traceRayWithAdaptiveSupersampling(Point centerP, double width, double Height, double minWidth, double minHeight, Point cameraLoc, Vector Vright, Vector Vup, List<Point> prePoints) {
+        return AdaptiveSuperSamplingRec(centerP,width,Height,minWidth,minHeight,cameraLoc,Vright,Vup,prePoints);
     }
 
     /**
@@ -136,9 +140,10 @@ public class SimpleRayTracer extends RayTracerBase {
         if (gp == null) return scene.background.scale(kx);
 
         return isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDirection()))
-                ? Color.BLACK : calcColor(gp, ray, level - 1, kkx).scale(kx);
+                ? Color.BLACK : calcColor(gp, ray, level - 1, kkx);
 
     }
+
 
     /**
      * Calculates the combined global effects (reflection and refraction) at a given intersection point.
@@ -159,28 +164,31 @@ public class SimpleRayTracer extends RayTracerBase {
         return calcGlobalEffect(constructReflectedRay(gp, v, n),
                 level, k, material.kR).
                 add(calcGlobalEffect(constructRefractedRay(gp, v, n),
-                level, k, material.kT));
+                        level, k, material.kT));
     }
 
 
     /**
      * Calculates the color at a given intersection point `gp` on a surface for a ray `ray`.
      * Includes both local and global lighting effects recursively up to `level` depth.
-     * @param gp The intersection point on the surface.
-     * @param ray The ray being traced.
+     *
+     * @param gp    The intersection point on the surface.
+     * @param ray   The ray being traced.
      * @param level The current recursion level for global effects.
-     * @param k The attenuation factors for ambient, diffuse, and specular light.
+     * @param k     The attenuation factors for ambient, diffuse, and specular light.
      * @return The calculated color at the intersection point.
      */
     private Color calcColor(GeoPoint gp, Ray ray, int level, Double3 k) {
         Color color = calcLocalEffects(gp, ray, k);
-        return 1 == level ? color : color.add(calcGlobalEffects(gp, ray, level, k));}
+        return 1 == level ? color : color.add(calcGlobalEffects(gp, ray, level, k));
+    }
 
     /**
      * Calculates the color at a given intersection point `gp` on a surface for a ray `ray`.
      * Uses maximum calculation depth for global effects and initial attenuation factors.
      * Adds ambient light intensity from the scene.
-     * @param gp The intersection point on the surface.
+     *
+     * @param gp  The intersection point on the surface.
      * @param ray The ray being traced.
      * @return The final calculated color at the intersection point including ambient light.
      */
@@ -193,8 +201,8 @@ public class SimpleRayTracer extends RayTracerBase {
      * Constructs a reflected ray based on the incoming ray, the normal at the intersection point, and the geometry.
      *
      * @param gp the intersection point
-     * @param v the direction vector of the incoming ray
-     * @param n the normal vector at the intersection point
+     * @param v  the direction vector of the incoming ray
+     * @param n  the normal vector at the intersection point
      * @return the reflected ray
      */
     private Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n) {
@@ -211,8 +219,8 @@ public class SimpleRayTracer extends RayTracerBase {
      * Constructs a refracted ray based on the incoming ray, the normal at the intersection point, and the geometry.
      *
      * @param gp the intersection point
-     * @param v the direction vector of the incoming ray
-     * @param n the normal vector at the intersection point
+     * @param v  the direction vector of the incoming ray
+     * @param n  the normal vector at the intersection point
      * @return the refracted ray
      */
     private Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
@@ -222,6 +230,7 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      * Finds the closest intersection point between the given ray and any object in the geometries collection.
      * Returns the intersection point as a GeoPoint object.
+     *
      * @param ray The ray for which to find the closest intersection.
      * @return The closest intersection point with any object in the geometries collection, or null if no intersection found.
      */
@@ -266,7 +275,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param gp  The geometry point where the effects are being calculated.
      * @param ray The ray that intersects the geometry point.
      * @param k   The transparency coefficient.
-     * @return    The color resulting from the local lighting effects.
+     * @return The color resulting from the local lighting effects.
      */
     private Color calcLocalEffects(GeoPoint gp, Ray ray, Double3 k) {
         if (gp == null || gp.geometry == null) {
@@ -308,12 +317,12 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      * Calculates the transparency factor between a geometry point and a light source.
      *
-     * @param gp      The geometry point.
-     * @param light   The light source.
-     * @param l       The vector from the point to the light source.
-     * @param n       The normal vector at the geometry point.
-     * @param nv      The dot product of the normal vector and the vector to the light source.
-     * @return        The transparency factor as a Double3 object.
+     * @param gp    The geometry point.
+     * @param light The light source.
+     * @param l     The vector from the point to the light source.
+     * @param n     The normal vector at the geometry point.
+     * @param nv    The dot product of the normal vector and the vector to the light source.
+     * @return The transparency factor as a Double3 object.
      */
     private Double3 transparency(GeoPoint gp, LightSource light, Vector l, Vector n, double nv) {
         // Find all intersections between the ray and the scene geometries
@@ -338,5 +347,68 @@ public class SimpleRayTracer extends RayTracerBase {
         return ktr;
     }
 
-}
+    public Color AdaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLoc, Vector Vright, Vector Vup, List<Point> prePoints) {
+        if (Width < minWidth * 2 || Height < minHeight * 2) {
+            Vector direction = centerP.subtract(cameraLoc);
+//            if (direction.equals(Vector.ZERO)) {
+//                return primitives.Color.BLACK;
+//            }
+            return this.traceRay(new Ray(cameraLoc, direction));
+        }
 
+        List<Point> nextCenterPList = new LinkedList<>();
+        List<Point> cornersList = new LinkedList<>();
+        List<primitives.Color> colorList = new LinkedList<>();
+        Point tempCorner;
+        Ray tempRay;
+
+        // Iterate over the corners of the pixel and perform sub-sampling
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                tempCorner = centerP.add(Vright.scale(i * Width / 2)).add(Vup.scale(j * Height / 2));
+                cornersList.add(tempCorner);
+                // Check if the sub-pixel's corner is already sampled
+                if (prePoints == null || !isInList(prePoints, tempCorner)) {
+                    Vector direction = tempCorner.subtract(cameraLoc);
+                    if (!direction.equals(Vector.ZERO)) {
+                        tempRay = new Ray(cameraLoc, direction);
+                        nextCenterPList.add(centerP.add(Vright.scale(i * Width / 4)).add(Vup.scale(j * Height / 4)));
+                        colorList.add(traceRay(tempRay));
+                    }
+                }
+            }
+        }
+
+        if (nextCenterPList.isEmpty()) {
+            // If no valid sub-pixels were found, return black color.
+            return primitives.Color.BLACK;
+        }
+
+        boolean isAllEquals = true;
+        primitives.Color tempColor = colorList.get(0);
+        // Check if all colors in the colorList are almost equal
+        for (primitives.Color color : colorList) {
+            if (!tempColor.isAlmostEquals(color))
+                isAllEquals = false;
+        }
+        if (isAllEquals && colorList.size() > 1)
+            // If all colors are equal and there is more than one color, return the first color.
+            return tempColor;
+
+        tempColor = primitives.Color.BLACK;
+        // Recursively perform adaptive super-sampling on sub-pixels
+        for (Point center : nextCenterPList) {
+            tempColor = tempColor.add(AdaptiveSuperSamplingRec(center, Width / 2, Height / 2, minWidth, minHeight, cameraLoc, Vright, Vup, cornersList));
+        }
+        // Reduce the color by dividing by the number of sub-pixels
+        return tempColor.reduce(nextCenterPList.size());
+    }
+
+    private boolean isInList(List<Point> pointsList, Point point) {
+        for (Point tempPoint : pointsList) {
+            if (point.equals(tempPoint))
+                return true;
+        }
+        return false;
+    }
+}
